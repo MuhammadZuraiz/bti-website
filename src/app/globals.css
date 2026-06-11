@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+:root {
+  --brand-navy: #171448;
+  --brand-purple: #28124f;
+  --brand-red: #b51f36;
+  --brand-red-dark: #8e192c;
+  --brand-ink: #151525;
+  --brand-muted: #5e6472;
+  --brand-soft: #f6f7fb;
+  --brand-cream: #fbfaf8;
+  --brand-border: #e5e7ee;
+  --brand-white: #ffffff;
+  --brand-green: #176b5a;
+  --brand-gold: #b98b2f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--brand-cream);
+  color: var(--brand-ink);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+::selection {
+  background: rgba(181, 31, 54, 0.18);
+}
+
+:focus-visible {
+  outline: 3px solid rgba(181, 31, 54, 0.45);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.container-page {
+  width: min(1120px, calc(100% - 32px));
+  margin-inline: auto;
+}
+
+.surface {
+  border: 1px solid var(--brand-border);
+  background: var(--brand-white);
+  box-shadow: 0 16px 45px rgba(23, 20, 72, 0.08);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.institutional-heading {
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: 0;
+}
+
+.skip-link {
+  position: fixed;
+  inset-inline-start: 16px;
+  top: 12px;
+  z-index: 100;
+  transform: translateY(-140%);
+  border-radius: 6px;
+  background: var(--brand-navy);
+  color: white;
+  padding: 10px 14px;
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.field-label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--brand-ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.field-control {
+  min-height: 46px;
+  width: 100%;
+  border: 1px solid var(--brand-border);
+  border-radius: 8px;
+  background: white;
+  padding: 0.7rem 0.85rem;
+  color: var(--brand-ink);
+}
+
+.field-control:focus {
+  border-color: var(--brand-red);
+}
+
+.form-error {
+  color: var(--brand-red-dark);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.nav-dropdown[open] summary svg {
+  transform: rotate(180deg);
+}
+
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+@media (max-width: 767px) {
+  .mobile-safe-bottom {
+    padding-bottom: 76px;
+  }
+}

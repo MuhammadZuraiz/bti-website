@@ -1,0 +1,26 @@
+# Content Needed
+
+- Confirmed canonical domain
+- Approved email domain
+- Official WhatsApp number
+- Final contact information
+- Opening hours
+- Approved address wording
+- Current course list
+- Schedules
+- Fees
+- Duration details
+- Brochures
+- Arabic translations
+- Photography
+- Leadership details
+- Accreditation documents
+- Approved trust badges
+- Approved testimonials
+- Legal-page review
+- Privacy contact
+- Cookie policy decision
+- Social-profile URLs
+- Google Business Profile URL
+- Map URL
+- Odoo integration endpoint
