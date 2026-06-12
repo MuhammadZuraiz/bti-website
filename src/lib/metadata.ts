@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import type { Locale } from "@/lib/locale";
+import { getEnabledLocales } from "@/lib/site-utils";
 
 type MetadataInput = {
   locale: Locale;
@@ -18,6 +19,12 @@ export function localizedMetadata({
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
   const suffix = cleanPath === "/" ? "" : cleanPath;
   const canonical = `${siteConfig.siteUrl}/${locale}${suffix}`;
+  const languages = Object.fromEntries(
+    getEnabledLocales().map((enabledLocale) => [
+      enabledLocale,
+      `${siteConfig.siteUrl}/${enabledLocale}${suffix}`
+    ])
+  );
 
   return {
     title,
@@ -25,8 +32,7 @@ export function localizedMetadata({
     alternates: {
       canonical,
       languages: {
-        en: `${siteConfig.siteUrl}/en${suffix}`,
-        ar: `${siteConfig.siteUrl}/ar${suffix}`,
+        ...languages,
         "x-default": `${siteConfig.siteUrl}/en${suffix}`
       }
     },
@@ -36,12 +42,21 @@ export function localizedMetadata({
       url: canonical,
       siteName: `${siteConfig.businessName} ${siteConfig.city}`,
       type: "website",
-      locale: locale === "ar" ? "ar_AE" : "en_AE"
+      locale: locale === "ar" ? "ar_AE" : "en_AE",
+      images: [
+        {
+          url: siteConfig.metadataImages.openGraph,
+          width: 1200,
+          height: 630,
+          alt: `${siteConfig.businessName} ${siteConfig.city}`
+        }
+      ]
     },
     twitter: {
       card: "summary_large_image",
       title,
-      description
+      description,
+      images: [siteConfig.metadataImages.twitter]
     }
   };
 }

@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model LeadSubmission {
+  id                    String    @id @default(cuid())
+  publicReference       String    @unique
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  leadType              String
+  deliveryStatus        String    @default("queued")
+  deliveryAttempts      Int       @default(0)
+  lastDeliveryAttemptAt DateTime?
+  deliveredAt           DateTime?
+  failureReason         String?
+
+  fullName              String
+  phone                 String?
+  email                 String?
+  preferredContact      String?
+
+  courseInterest        String?
+  courseSlug            String?
+  resourceSlug          String?
+
+  companyName           String?
+  jobTitle              String?
+  learnerCount          Int?
+  trainingArea          String?
+  preferredDeliveryMode String?
+
+  englishLearningGoal   String?
+  preferredTime         String?
+  message               String?
+
+  locale                String
+  sourcePage            String
+  referrer              String?
+
+  utmSource             String?
+  utmMedium             String?
+  utmCampaign           String?
+  utmContent            String?
+  utmTerm               String?
+
+  consent               Boolean
+  requestFingerprint    String?
+  webhookDeliveryId     String?
+
+  @@index([createdAt])
+  @@index([deliveryStatus])
+  @@index([leadType])
+}

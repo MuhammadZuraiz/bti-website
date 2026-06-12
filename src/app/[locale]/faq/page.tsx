@@ -6,6 +6,7 @@ import { siteConfig } from "@/config/site";
 import { isLocale } from "@/lib/locale";
 import { faqSchema } from "@/lib/schema";
 import { localizedMetadata } from "@/lib/metadata";
+import { isLocaleEnabled } from "@/lib/site-utils";
 
 type Params = Promise<{ locale: string }>;
 
@@ -33,17 +34,17 @@ const faq = [
   {
     question: "How do I enquire about course fees?",
     answer:
-      "Contact admissions for current fee details. Fees are not published here until BTI approves exact values."
+      "Contact admissions for current fee details and available payment options."
   },
   {
     question: "Where is BTI located in Sharjah?",
-    answer: `${siteConfig.businessName} is configured at ${siteConfig.address}. Confirm directions before visiting.`
+    answer: `${siteConfig.businessName} is located in ${siteConfig.area}, ${siteConfig.city}. Confirm directions before visiting.`
   }
 ];
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
-  const locale = isLocale(rawLocale) ? rawLocale : "en";
+  const locale = isLocale(rawLocale) && isLocaleEnabled(rawLocale) ? rawLocale : "en";
   return localizedMetadata({
     locale,
     path: "/faq",
@@ -55,7 +56,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function FaqPage({ params }: { params: Params }) {
   const { locale: rawLocale } = await params;
-  if (!isLocale(rawLocale)) {
+  if (!isLocale(rawLocale) || !isLocaleEnabled(rawLocale)) {
     notFound();
   }
 
@@ -67,7 +68,7 @@ export default async function FaqPage({ params }: { params: Params }) {
           <SectionHeading
             eyebrow="FAQ"
             title="Useful answers before you enquire."
-            intro="These answers are intentionally careful. Admissions should confirm current schedules, fees, and availability."
+            intro="Find quick answers about course choice, schedules, placement-test guidance, corporate training and fee enquiries."
           />
           <div className="grid gap-4 md:grid-cols-2">
             {faq.map((item) => (

@@ -10,7 +10,7 @@ describe("course data", () => {
     );
   });
 
-  it("keeps course details CRM-ready without invented fixed fees", () => {
+  it("keeps course details admissions-ready without invented fixed fees", () => {
     for (const course of courses) {
       expect(course.slug).toMatch(/^[a-z0-9-]+$/);
       expect(course.title).toBeTruthy();

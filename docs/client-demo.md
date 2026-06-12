@@ -4,7 +4,7 @@
 2. Show the immediate credibility improvement: logo, structured hero, trust strip, course discovery and visible admissions CTAs.
 3. Show clear course discovery through the searchable catalogue and SEO course pages.
 4. Submit a course enquiry and explain the validated lead payload.
-5. Show the CRM-ready Odoo/webhook adapter in `src/services/leads.ts`.
+5. Show the PostgreSQL-first lead capture path and Odoo webhook adapter.
 6. Show placement-test lead capture.
 7. Show corporate-training lead capture.
 8. Show local SEO metadata, sitemap and structured data.

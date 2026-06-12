@@ -212,7 +212,7 @@ export const courses: Course[] = [
       {
         question: "Are these legal qualifications?",
         answer:
-          "BTI does not publish unverified qualification claims. Ask admissions for the exact current programme scope."
+          "Ask admissions for the exact current programme scope and any available completion details before enrolling."
       }
     ],
     relatedCourseSlugs: [

@@ -2,9 +2,11 @@
 
 import { FileText, Send } from "lucide-react";
 import Link from "next/link";
+import { ContextLink } from "@/components/conversion/context-link";
 import { trackEvent } from "@/lib/analytics";
 import type { Resource } from "@/content/resources";
 import { type Locale, localizePath } from "@/lib/locale";
+import { isResourcePublished } from "@/lib/site-utils";
 
 export function ResourceGrid({
   resources,
@@ -24,9 +26,9 @@ export function ResourceGrid({
           <p className="mt-3 flex-1 text-sm leading-6 text-[var(--brand-muted)]">
             {resource.description}
           </p>
-          {resource.isAvailable && resource.fileUrl ? (
+          {isResourcePublished(resource) ? (
             <Link
-              href={resource.fileUrl}
+              href={resource.fileUrl as string}
               onClick={() => trackEvent("resource_download", { resource: resource.slug })}
               className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[var(--brand-navy)] px-4 py-2 text-sm font-extrabold text-white"
             >
@@ -34,13 +36,13 @@ export function ResourceGrid({
               Download guide
             </Link>
           ) : (
-            <Link
+            <ContextLink
               href={localizePath(locale, `/contact?resource=${resource.slug}`)}
               className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--brand-border)] px-4 py-2 text-sm font-extrabold text-[var(--brand-navy)]"
             >
               <Send size={17} aria-hidden="true" />
-              Request this guide
-            </Link>
+              Request this guide from admissions
+            </ContextLink>
           )}
         </article>
       ))}

@@ -7,12 +7,13 @@ import { siteConfig } from "@/config/site";
 import { courseCategories } from "@/content/courses";
 import { isLocale, localizePath, type Locale } from "@/lib/locale";
 import { localizedMetadata } from "@/lib/metadata";
+import { isLocaleEnabled } from "@/lib/site-utils";
 
 type Params = Promise<{ locale: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
-  const locale = isLocale(rawLocale) ? rawLocale : "en";
+  const locale = isLocale(rawLocale) && isLocaleEnabled(rawLocale) ? rawLocale : "en";
   return localizedMetadata({
     locale,
     path: "/about",
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function AboutPage({ params }: { params: Params }) {
   const { locale: rawLocale } = await params;
-  if (!isLocale(rawLocale)) {
+  if (!isLocale(rawLocale) || !isLocaleEnabled(rawLocale)) {
     notFound();
   }
   const locale: Locale = rawLocale;
@@ -35,7 +36,7 @@ export default async function AboutPage({ params }: { params: Params }) {
         <SectionHeading
           eyebrow="About BTI"
           title="Training support for learners, professionals, and organisations in Sharjah."
-          intro="BTI is presented here as a Sharjah-based training centre offering English, IELTS preparation and professional training options. Unverified claims remain disabled until approved."
+          intro="BTI is a Sharjah-based training centre offering English, IELTS preparation and professional training options for learners, parents, professionals and organisations."
         />
         <div className="grid gap-6 lg:grid-cols-3">
           {["Practical guidance", "Clear course discovery", "Admissions support"].map((value) => (
@@ -66,8 +67,8 @@ export default async function AboutPage({ params }: { params: Params }) {
             <h2 className="mt-4 text-2xl font-extrabold text-[var(--brand-navy)]">Location</h2>
             <p className="mt-3 leading-7 text-[var(--brand-muted)]">
               {siteConfig.businessName} is configured as a {siteConfig.city}
-              -based training centre in {siteConfig.area}. Final address wording,
-              opening hours, parking notes, and map URL require business approval.
+              -based training centre in {siteConfig.area}. Speak with admissions
+              for directions and current visit information before travelling.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <ButtonLink href={localizePath(locale, "/courses")}>Explore Courses</ButtonLink>

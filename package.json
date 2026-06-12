@@ -6,13 +6,21 @@
   "scripts": {
     "dev": "next dev",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -p tsconfig.typecheck.json --noEmit",
     "test": "vitest run",
-    "build": "next build"
+    "build": "next build",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "leads:export": "node scripts/export-leads.mjs"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "lucide-react": "latest",
     "next": "latest",
+    "pg": "^8.21.0",
     "react": "latest",
     "react-dom": "latest",
     "react-hook-form": "latest",
@@ -22,12 +30,14 @@
     "@eslint/eslintrc": "latest",
     "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
+    "@types/pg": "^8.20.0",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",
     "postcss": "latest",
     "prettier": "latest",
+    "prisma": "^7.8.0",
     "tailwindcss": "latest",
     "typescript": "latest",
     "vitest": "latest"

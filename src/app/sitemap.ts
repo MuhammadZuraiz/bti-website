@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { courses } from "@/content/courses";
-import { locales } from "@/lib/locale";
+import { getEnabledLocales, isLegalPagePublished } from "@/lib/site-utils";
 
 const staticRoutes = [
   "",
@@ -12,15 +12,16 @@ const staticRoutes = [
   "/resources",
   "/faq",
   "/contact",
-  "/privacy",
-  "/cookies",
-  "/terms",
-  "/accessibility"
+  ...(isLegalPagePublished("privacy") ? ["/privacy"] : []),
+  ...(isLegalPagePublished("cookies") ? ["/cookies"] : []),
+  ...(isLegalPagePublished("terms") ? ["/terms"] : []),
+  ...(isLegalPagePublished("accessibility") ? ["/accessibility"] : [])
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  const localizedStatic = locales.flatMap((locale) =>
+  const enabledLocales = getEnabledLocales();
+  const localizedStatic = enabledLocales.flatMap((locale) =>
     staticRoutes.map((route) => ({
       url: `${siteConfig.siteUrl}/${locale}${route}`,
       lastModified: now,
@@ -29,7 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   );
 
-  const courseRoutes = locales.flatMap((locale) =>
+  const courseRoutes = enabledLocales.flatMap((locale) =>
     courses.map((course) => ({
       url: `${siteConfig.siteUrl}/${locale}/courses/${course.slug}`,
       lastModified: now,

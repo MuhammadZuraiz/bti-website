@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
-import { Building2, CheckCircle2, FileText } from "lucide-react";
+import { Building2, CheckCircle2 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { LeadForm } from "@/components/forms/lead-form";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { isLocale, type Locale } from "@/lib/locale";
 import { localizedMetadata } from "@/lib/metadata";
+import { isLocaleEnabled } from "@/lib/site-utils";
 
 type Params = Promise<{ locale: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
-  const locale = isLocale(rawLocale) ? rawLocale : "en";
+  const locale = isLocale(rawLocale) && isLocaleEnabled(rawLocale) ? rawLocale : "en";
   return localizedMetadata({
     locale,
     path: "/corporate-training",
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function CorporateTrainingPage({ params }: { params: Params }) {
   const { locale: rawLocale } = await params;
-  if (!isLocale(rawLocale)) {
+  if (!isLocale(rawLocale) || !isLocaleEnabled(rawLocale)) {
     notFound();
   }
   const locale: Locale = rawLocale;
@@ -93,16 +94,6 @@ export default async function CorporateTrainingPage({ params }: { params: Params
                 <li>2. BTI reviews the request and discusses current options.</li>
                 <li>3. Admissions or corporate training staff respond with suitable next steps.</li>
               </ol>
-            </div>
-            <div className="surface rounded-lg p-6">
-              <FileText size={28} className="text-[var(--brand-red)]" />
-              <h2 className="mt-3 text-xl font-extrabold text-[var(--brand-navy)]">
-                Corporate profile placeholder
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">
-                A downloadable corporate profile can be added once BTI approves
-                final training areas, credentials, and photography.
-              </p>
             </div>
           </div>
           <div id="corporate-form">

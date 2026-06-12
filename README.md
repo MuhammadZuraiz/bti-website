@@ -12,6 +12,8 @@ Production-oriented Next.js website for British Training Institute Sharjah, buil
 - Lucide icons
 - Zod validation
 - React Hook Form
+- Prisma ORM
+- PostgreSQL
 - Vitest tests
 - ESLint
 
@@ -19,23 +21,26 @@ Production-oriented Next.js website for British Training Institute Sharjah, buil
 
 ```bash
 pnpm install
+docker compose up -d postgres
+pnpm db:generate
+pnpm db:migrate
 pnpm dev
 ```
 
-If using npm:
-
-```bash
-npm install
-npm run dev
-```
+This project is managed with pnpm. Do not add npm or Yarn lockfiles.
 
 ## Scripts
 
 ```bash
-npm run lint
-npm run typecheck
-npm run test
-npm run build
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm db:generate
+pnpm db:migrate
+pnpm db:deploy
+pnpm db:studio
+pnpm leads:export
 ```
 
 ## Environment Variables
@@ -50,10 +55,17 @@ NEXT_PUBLIC_INSTAGRAM_URL=
 NEXT_PUBLIC_FACEBOOK_URL=
 NEXT_PUBLIC_LINKEDIN_URL=
 NEXT_PUBLIC_GA_MEASUREMENT_ID=
+DATABASE_URL=
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ODOO_LEAD_WEBHOOK_URL=
 ODOO_LEAD_WEBHOOK_SECRET=
 GENERIC_LEAD_WEBHOOK_URL=
 GENERIC_LEAD_WEBHOOK_SECRET=
+LEAD_RETRY_CRON_SECRET=
+LEAD_HASH_SALT=
 ```
 
 ## Update Contact Information
@@ -74,16 +86,25 @@ Keep the logo unchanged at `public/images/bti-logo.jpg`. Add approved photograph
 
 ## Analytics
 
-The helper in `src/lib/analytics.ts` safely does nothing unless `window.gtag` is configured. Add the GA script only after cookie/consent decisions are approved.
+The helper in `src/lib/analytics.ts` safely does nothing unless `window.gtag` is configured. Conversion events fire only after durable lead persistence returns `ok: true`.
 
-## Odoo Webhook Integration
+## Lead Capture
 
-Set `ODOO_LEAD_WEBHOOK_URL` and optional `ODOO_LEAD_WEBHOOK_SECRET`. The lead API validates submissions, captures UTM fields and can post CRM-ready payloads to Odoo or a middleware endpoint.
+Lead capture is database-first: `/api/leads` validates submissions, applies spam controls, saves the lead in PostgreSQL, then attempts Odoo and generic webhook delivery. Visitors receive a success message only after PostgreSQL persistence.
+
+Read:
+
+- `docs/lead-capture-architecture.md`
+- `docs/odoo-integration.md`
+- `docs/production-environment.md`
+- `docs/spam-protection.md`
+- `docs/lead-retry-runbook.md`
+- `docs/lead-export-runbook.md`
 
 ## Deployment
 
-Deploy on a platform that supports Next.js App Router. Set `NEXT_PUBLIC_SITE_URL` to the canonical production domain before launch, then verify sitemap, robots, form delivery and Search Console indexing.
+Deploy on a platform that supports Next.js App Router and PostgreSQL. Set `NEXT_PUBLIC_SITE_URL` to the canonical production domain before launch, run `pnpm db:deploy`, configure Turnstile, Redis, a lead webhook, the retry cron secret, and verify sitemap, robots, form delivery and Search Console indexing.
 
 ## Facts Requiring Approval
 
-Canonical domain, email domain, WhatsApp number, full address wording, opening hours, course list, schedules, fees, durations, certificates, Arabic legal copy, photography, accreditation, partner logos, testimonials, Google Business Profile URL, map URL and Odoo endpoint all require business approval before production.
+Canonical domain, email domain, WhatsApp number, full address wording, opening hours, course list, schedules, fees, durations, certificates, Arabic translations, privacy/cookie/terms wording, photography, accreditation, partner logos, testimonials, Google Business Profile URL, map URL and Odoo endpoint all require business approval before production.

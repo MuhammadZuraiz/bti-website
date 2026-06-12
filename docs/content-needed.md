@@ -18,8 +18,10 @@
 - Approved trust badges
 - Approved testimonials
 - Legal-page review
+- Approved privacy notice wording
+- Approved cookie notice wording and consent decision
+- Approved terms and conditions
 - Privacy contact
-- Cookie policy decision
 - Social-profile URLs
 - Google Business Profile URL
 - Map URL

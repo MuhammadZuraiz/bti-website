@@ -8,15 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button-link";
 import { courses, getCourseBySlug } from "@/content/courses";
 import { siteConfig } from "@/config/site";
-import { isLocale, locales, localizePath, type Locale } from "@/lib/locale";
+import { isLocale, localizePath, type Locale } from "@/lib/locale";
 import { breadcrumbSchema, courseSchema, faqSchema } from "@/lib/schema";
 import { localizedMetadata } from "@/lib/metadata";
 import type { Course } from "@/types/course";
+import { getEnabledLocales, isLocaleEnabled } from "@/lib/site-utils";
 
 type Params = Promise<{ locale: string; slug: string }>;
 
 export function generateStaticParams() {
-  return locales.flatMap((locale) =>
+  return getEnabledLocales().flatMap((locale) =>
     courses.map((course) => ({ locale, slug: course.slug }))
   );
 }
@@ -27,7 +28,7 @@ export async function generateMetadata({
   params: Params;
 }): Promise<Metadata> {
   const { locale: rawLocale, slug } = await params;
-  const locale = isLocale(rawLocale) ? rawLocale : "en";
+  const locale = isLocale(rawLocale) && isLocaleEnabled(rawLocale) ? rawLocale : "en";
   const course = getCourseBySlug(slug);
 
   if (!course) {
@@ -48,7 +49,7 @@ export async function generateMetadata({
 
 export default async function CourseDetailPage({ params }: { params: Params }) {
   const { locale: rawLocale, slug } = await params;
-  if (!isLocale(rawLocale)) {
+  if (!isLocale(rawLocale) || !isLocaleEnabled(rawLocale)) {
     notFound();
   }
   const locale: Locale = rawLocale;
@@ -107,7 +108,7 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
             </div>
             <aside className="surface rounded-lg p-5">
               <h2 className="text-xl font-extrabold text-[var(--brand-navy)]">
-                Current details to confirm
+                Course information
               </h2>
               <dl className="mt-4 grid gap-4 text-sm">
                 <div>
@@ -211,6 +212,7 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
               leadType="course-enquiry"
               locale={locale}
               courseInterest={course.title}
+              courseSlug={course.slug}
               compact
               title="Ask admissions about this programme"
               submitLabel="Ask Admissions"

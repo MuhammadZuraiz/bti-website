@@ -3,10 +3,11 @@ import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { MobileStickyCta } from "@/components/layout/mobile-sticky-cta";
 import { getDictionary } from "@/content/i18n";
-import { getDirection, isLocale, locales, type Locale } from "@/lib/locale";
+import { getDirection, isLocale, type Locale } from "@/lib/locale";
+import { getEnabledLocales, isLocaleEnabled } from "@/lib/site-utils";
 
 export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
+  return getEnabledLocales().map((locale) => ({ locale }));
 }
 
 export default async function LocaleLayout({
@@ -18,7 +19,7 @@ export default async function LocaleLayout({
 }) {
   const { locale: rawLocale } = await params;
 
-  if (!isLocale(rawLocale)) {
+  if (!isLocale(rawLocale) || !isLocaleEnabled(rawLocale)) {
     notFound();
   }
 
@@ -29,7 +30,7 @@ export default async function LocaleLayout({
   return (
     <div lang={locale} dir={dir} className="mobile-safe-bottom min-h-screen">
       <a href="#main-content" className="skip-link">
-        Skip to content
+        {dictionary.common.skipToContent}
       </a>
       <Header locale={locale} dictionary={dictionary} />
       <main id="main-content">{children}</main>
