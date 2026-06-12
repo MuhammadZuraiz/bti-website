@@ -38,6 +38,12 @@ export function Header({ locale, dictionary }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
+  const [menuPathname, setMenuPathname] = useState(pathname);
+
+  if (menuPathname !== pathname) {
+    setMenuPathname(pathname);
+    setOpen(false);
+  }
   const alternateLocale = getAlternateEnabledLocale(locale);
   const languageHref = useMemo(
     () => switchLocalePath(pathname, locale),
@@ -58,10 +64,6 @@ export function Header({ locale, dictionary }: HeaderProps) {
       menuButtonRef.current?.focus();
     }
   }, []);
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   useEffect(() => {
     if (!open) {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { hashIdentifier } from "@/lib/server/lead-security";
 import {
+  clearInMemoryRateLimitStore,
   protectLeadSubmission,
   type RateLimitStore
 } from "@/services/spam-protection";
@@ -59,7 +60,7 @@ describe("spam protection", () => {
     const result = await protectLeadSubmission({
       lead,
       request,
-      env: {},
+      env: { ALLOW_DEV_TURNSTILE_BYPASS: "true" },
       store: storeWithCounts({ "lead:ip10": 6 })
     });
 
@@ -70,11 +71,77 @@ describe("spam protection", () => {
     const result = await protectLeadSubmission({
       lead,
       request,
-      env: {},
+      env: { ALLOW_DEV_TURNSTILE_BYPASS: "true" },
       store: storeWithCounts({ "lead:duplicate": 2 })
     });
 
     expect(result).toMatchObject({ ok: false, reason: "duplicate" });
+  });
+
+  it("rejects missing Turnstile configuration without an explicit dev bypass", async () => {
+    const result = await protectLeadSubmission({
+      lead,
+      request,
+      env: {},
+      store: storeWithCounts()
+    });
+
+    expect(result).toMatchObject({ ok: false, reason: "turnstile" });
+  });
+
+  it("ignores the Turnstile dev bypass in production", async () => {
+    const result = await protectLeadSubmission({
+      lead,
+      request,
+      env: { NODE_ENV: "production", ALLOW_DEV_TURNSTILE_BYPASS: "true" },
+      store: storeWithCounts()
+    });
+
+    expect(result).toMatchObject({ ok: false, reason: "turnstile" });
+  });
+
+  it("ignores the full spam-protection dev bypass in production", async () => {
+    const result = await protectLeadSubmission({
+      lead,
+      request,
+      env: { NODE_ENV: "production", ALLOW_DEV_SPAM_PROTECTION_BYPASS: "true" }
+    });
+
+    expect(result).toMatchObject({ ok: false, reason: "turnstile" });
+  });
+
+  it("still rejects honeypot hits when the dev spam bypass is active", async () => {
+    const result = await protectLeadSubmission({
+      lead: { ...lead, website: "https://spam.example" },
+      request,
+      env: { ALLOW_DEV_SPAM_PROTECTION_BYPASS: "true" }
+    });
+
+    expect(result).toMatchObject({ ok: false, reason: "honeypot" });
+  });
+
+  it("refuses to fall back to in-memory rate limiting without the explicit dev flag", async () => {
+    const result = await protectLeadSubmission({
+      lead,
+      request,
+      env: { ALLOW_DEV_TURNSTILE_BYPASS: "true" }
+    });
+
+    expect(result).toMatchObject({ ok: false, reason: "configuration" });
+  });
+
+  it("uses in-memory rate limiting in development only with the explicit flag", async () => {
+    clearInMemoryRateLimitStore();
+    const result = await protectLeadSubmission({
+      lead,
+      request,
+      env: {
+        ALLOW_DEV_TURNSTILE_BYPASS: "true",
+        ALLOW_DEV_LOCAL_RATE_LIMIT: "true"
+      }
+    });
+
+    expect(result.ok).toBe(true);
   });
 
   it("hashes identifiers without storing the raw value", () => {

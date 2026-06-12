@@ -50,4 +50,24 @@ describe("server environment validation", () => {
     });
     expect(result.ok).toBe(false);
   });
+
+  it.each([
+    "ALLOW_DEV_SPAM_PROTECTION_BYPASS",
+    "ALLOW_DEV_TURNSTILE_BYPASS",
+    "ALLOW_DEV_LOCAL_RATE_LIMIT"
+  ])("rejects %s enabled in production", (flag) => {
+    const result = validateServerEnv({
+      ...productionEnv,
+      [flag]: "true"
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it("accepts dev bypass flags that are present but disabled in production", () => {
+    const result = validateServerEnv({
+      ...productionEnv,
+      ALLOW_DEV_TURNSTILE_BYPASS: "false"
+    });
+    expect(result.ok).toBe(true);
+  });
 });

@@ -1,8 +1,15 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const localDatabaseUrl =
+  "postgresql://bti:bti_local_password@localhost:5432/bti_website?schema=public";
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL ?? localDatabaseUrl
+});
+const prisma = new PrismaClient({ adapter });
 
 function csvValue(value) {
   if (value === null || value === undefined) {

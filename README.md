@@ -32,14 +32,17 @@ This project is managed with pnpm. Do not add npm or Yarn lockfiles.
 ## Scripts
 
 ```bash
-pnpm lint
+pnpm lint                # ESLint across JS and TypeScript (src, tests, scripts, configs)
+pnpm lint:ts             # focused TypeScript-only lint
 pnpm typecheck
 pnpm test
 pnpm build
 pnpm db:generate
-pnpm db:migrate
-pnpm db:deploy
+pnpm db:migrate          # local migration development
+pnpm db:deploy           # staging and production deployment
+pnpm db:verify           # synthetic insert/read/delete round-trip + index check
 pnpm db:studio
+pnpm test:webhook-server # development-only webhook receiver for smoke tests
 pnpm leads:export
 ```
 
@@ -100,6 +103,7 @@ Read:
 - `docs/spam-protection.md`
 - `docs/lead-retry-runbook.md`
 - `docs/lead-export-runbook.md`
+- `docs/local-integration-testing.md`
 
 ## Deployment
 

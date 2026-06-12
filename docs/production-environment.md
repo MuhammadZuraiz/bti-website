@@ -33,7 +33,18 @@ Server-only secrets must not be prefixed with `NEXT_PUBLIC_`.
 
 ## Development Defaults
 
-Local Prisma commands use the Docker Compose PostgreSQL URL when `DATABASE_URL` is absent. The production API path still fails closed if required database, spam, retry or webhook variables are missing.
+Local Prisma commands use the Docker Compose PostgreSQL URL when `DATABASE_URL` is absent. The production API path still fails closed if required database, spam, retry or webhook variables are missing, and the Prisma client refuses to start in production without `DATABASE_URL`.
+
+If another PostgreSQL already occupies port 5432 locally, start the container on a different host port and point `DATABASE_URL` at it:
+
+```bash
+POSTGRES_PORT=5433 docker compose up -d postgres
+# DATABASE_URL=postgresql://bti:bti_local_password@localhost:5433/bti_website?schema=public
+```
+
+## Development Bypass Flags
+
+`ALLOW_DEV_SPAM_PROTECTION_BYPASS`, `ALLOW_DEV_TURNSTILE_BYPASS` and `ALLOW_DEV_LOCAL_RATE_LIMIT` are development-only. Each defaults to off and must be set to `true` explicitly. Production environment validation rejects any of them set to `true`, and the runtime ignores them in production regardless. Never set them in a deployed environment.
 
 ## Deployment Checklist
 

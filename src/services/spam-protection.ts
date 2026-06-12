@@ -1,5 +1,5 @@
 import type { ServerEnv } from "@/config/env.server";
-import { isProductionRuntime } from "@/config/env.server";
+import { isDevBypassEnabled } from "@/config/env.server";
 import type { LeadPayload } from "@/lib/lead-schema";
 import {
   createContactFingerprint,
@@ -83,7 +83,7 @@ async function verifyTurnstile(
   fetcher: TurnstileFetch
 ) {
   if (!env.TURNSTILE_SECRET_KEY) {
-    return !isProductionRuntime(env);
+    return isDevBypassEnabled("ALLOW_DEV_TURNSTILE_BYPASS", env);
   }
 
   if (!token) {
@@ -132,6 +132,13 @@ export async function protectLeadSubmission({
     };
   }
 
+  const salt = env.LEAD_HASH_SALT ?? env.LEAD_RETRY_CRON_SECRET;
+  const duplicateFingerprint = createDuplicateFingerprint(lead, salt);
+
+  if (isDevBypassEnabled("ALLOW_DEV_SPAM_PROTECTION_BYPASS", env)) {
+    return { ok: true, requestFingerprint: duplicateFingerprint };
+  }
+
   const turnstileOk = await verifyTurnstile(lead.turnstileToken, env, fetcher);
   if (!turnstileOk) {
     return {
@@ -145,7 +152,9 @@ export async function protectLeadSubmission({
   const limiter =
     store ??
     createUpstashRateLimitStore(env, fetcher) ??
-    (!isProductionRuntime(env) ? inMemoryRateLimitStore : undefined);
+    (isDevBypassEnabled("ALLOW_DEV_LOCAL_RATE_LIMIT", env)
+      ? inMemoryRateLimitStore
+      : undefined);
 
   if (!limiter) {
     return {
@@ -156,10 +165,8 @@ export async function protectLeadSubmission({
     };
   }
 
-  const salt = env.LEAD_HASH_SALT ?? env.LEAD_RETRY_CRON_SECRET;
   const ipHash = getHashedClientIp(request, salt);
   const contactFingerprint = createContactFingerprint(lead, salt);
-  const duplicateFingerprint = createDuplicateFingerprint(lead, salt);
 
   try {
     const [ipTenMinute, ipDaily, contactHourly, duplicateCount] =

@@ -71,6 +71,33 @@ describe("lead retry", () => {
     expect(result.status).toBe(401);
   });
 
+  it("fails closed when no retry secret is configured", async () => {
+    const result = await handleRetryLeads(request("anything"), { env: {} });
+
+    expect(result.status).toBe(503);
+    expect(result.body).toEqual({ error: "Retry secret is not configured." });
+  });
+
+  it("returns a summary without lead details", async () => {
+    const record = lead();
+    const { repository } = repo([record]);
+    const result = await handleRetryLeads(request("secret"), {
+      env: { LEAD_RETRY_CRON_SECRET: "secret" },
+      repository,
+      deliver: async () => ({ ok: true, destination: "odoo" })
+    });
+
+    const serialized = JSON.stringify(result.body);
+    expect(Object.keys(result.body).sort()).toEqual([
+      "attempted",
+      "delivered",
+      "skipped",
+      "stillQueued"
+    ]);
+    expect(serialized).not.toContain("Sample Learner");
+    expect(serialized).not.toContain("BTI-A7F29C");
+  });
+
   it("replays queued leads successfully", async () => {
     const record = lead();
     const { repository } = repo([record]);

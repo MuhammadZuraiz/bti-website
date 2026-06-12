@@ -134,7 +134,7 @@ const baseFields = {
   utmContent: optionalText(120),
   utmTerm: optionalText(120),
   turnstileToken: optionalText(2048),
-  website: z.string().trim().max(0, "Spam submission rejected.").optional()
+  website: z.string().trim().max(0, "We could not accept this submission.").optional()
 };
 
 const generalEnquirySchema = z.object({

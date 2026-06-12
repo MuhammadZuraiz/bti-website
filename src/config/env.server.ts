@@ -25,8 +25,19 @@ const environmentSchema = z.object({
   ODOO_LEAD_WEBHOOK_URL: optionalUrl,
   ODOO_LEAD_WEBHOOK_SECRET: optionalString,
   GENERIC_LEAD_WEBHOOK_URL: optionalUrl,
-  GENERIC_LEAD_WEBHOOK_SECRET: optionalString
+  GENERIC_LEAD_WEBHOOK_SECRET: optionalString,
+  ALLOW_DEV_SPAM_PROTECTION_BYPASS: optionalString,
+  ALLOW_DEV_TURNSTILE_BYPASS: optionalString,
+  ALLOW_DEV_LOCAL_RATE_LIMIT: optionalString
 });
+
+export const devBypassFlags = [
+  "ALLOW_DEV_SPAM_PROTECTION_BYPASS",
+  "ALLOW_DEV_TURNSTILE_BYPASS",
+  "ALLOW_DEV_LOCAL_RATE_LIMIT"
+] as const;
+
+export type DevBypassFlag = (typeof devBypassFlags)[number];
 
 export type ServerEnv = z.infer<typeof environmentSchema>;
 
@@ -46,6 +57,20 @@ export function isProductionRuntime(
   env: { NODE_ENV?: string; NEXT_PHASE?: string } = process.env
 ) {
   return env.NODE_ENV === "production" && env.NEXT_PHASE !== "phase-production-build";
+}
+
+/**
+ * Development-only bypasses must be opted into explicitly and can never
+ * activate in a production runtime, even if the variable is set.
+ */
+export function isDevBypassEnabled(
+  flag: DevBypassFlag,
+  env: Partial<Record<DevBypassFlag, string>> & {
+    NODE_ENV?: string;
+    NEXT_PHASE?: string;
+  } = process.env
+) {
+  return !isProductionRuntime(env) && env[flag] === "true";
 }
 
 export function validateServerEnv(
@@ -105,6 +130,12 @@ export function validateServerEnv(
   if (env.LEAD_RETRY_CRON_SECRET && env.LEAD_RETRY_CRON_SECRET.length < 16) {
     errors.push("LEAD_RETRY_CRON_SECRET must be at least 16 characters.");
   }
+
+  devBypassFlags.forEach((flag) => {
+    if (env[flag] === "true") {
+      errors.push(`${flag} must not be enabled in production.`);
+    }
+  });
 
   return errors.length ? { ok: false, errors } : { ok: true, env };
 }

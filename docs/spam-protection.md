@@ -26,7 +26,13 @@ IP addresses, emails and phone numbers are hashed before being used as rate-limi
 
 ## Development
 
-When Turnstile or Redis is absent in development, local adapters allow safe testing. Production fails closed if bot verification or rate limiting is not configured.
+Every protection layer fails closed unless an explicit development bypass is enabled. The bypasses are environment variables that default to off, only activate when set to `true`, and are rejected by production environment validation:
+
+- `ALLOW_DEV_TURNSTILE_BYPASS=true` lets submissions pass when no `TURNSTILE_SECRET_KEY` is configured.
+- `ALLOW_DEV_LOCAL_RATE_LIMIT=true` uses an in-memory rate-limit store when Redis REST is not configured.
+- `ALLOW_DEV_SPAM_PROTECTION_BYPASS=true` skips Turnstile and rate limiting entirely (the honeypot still applies). Intended only for local integration smoke tests.
+
+Without these flags, development behaves like production: missing Turnstile or rate-limit configuration blocks submissions. The flags are double-guarded — production environment validation rejects them, and the runtime check ignores them whenever `NODE_ENV` is `production`.
 
 ## Staging Test
 

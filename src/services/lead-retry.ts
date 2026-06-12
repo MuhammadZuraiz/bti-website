@@ -1,3 +1,4 @@
+import { createHash, timingSafeEqual } from "node:crypto";
 import type { ServerEnv } from "@/config/env.server";
 import { logger } from "@/lib/server/logger";
 import {
@@ -30,6 +31,17 @@ function secretFromRequest(request: Request) {
   return request.headers.get("x-bti-cron-secret") ?? bearer;
 }
 
+function secretsMatch(provided: string | undefined, configured: string) {
+  if (!provided) {
+    return false;
+  }
+
+  // Hashing both values first gives equal-length buffers for timingSafeEqual.
+  const providedDigest = createHash("sha256").update(provided).digest();
+  const configuredDigest = createHash("sha256").update(configured).digest();
+  return timingSafeEqual(providedDigest, configuredDigest);
+}
+
 export async function handleRetryLeads(
   request: Request,
   options: RetryOptions = {}
@@ -41,7 +53,7 @@ export async function handleRetryLeads(
     return { status: 503, body: { error: "Retry secret is not configured." } };
   }
 
-  if (secretFromRequest(request) !== configuredSecret) {
+  if (!secretsMatch(secretFromRequest(request), configuredSecret)) {
     return { status: 401, body: { error: "Unauthorized." } };
   }
 
