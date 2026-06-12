@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
+
+const bodyFont = localFont({
+  src: "./fonts/geist-latin.woff2",
+  variable: "--font-body",
+  display: "swap"
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
@@ -11,7 +18,11 @@ export const metadata: Metadata = {
   },
   description:
     "Explore English, IELTS preparation, business, accounting, HR and professional training options at British Training Institute in Sharjah.",
-  applicationName: "British Training Institute Sharjah"
+  applicationName: "British Training Institute Sharjah",
+  icons: {
+    icon: siteConfig.metadataImages.icon,
+    apple: siteConfig.metadataImages.apple
+  }
 };
 
 export default function RootLayout({
@@ -21,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={bodyFont.variable}>{children}</body>
     </html>
   );
 }

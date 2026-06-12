@@ -1,18 +1,27 @@
 "use client";
 
-import { Send } from "lucide-react";
+import { MessageCircle, Phone, Send } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import Script from "next/script";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { siteConfig } from "@/config/site";
+import { confirmedEventByLeadType } from "@/lib/lead-analytics";
 import { leadPayloadSchema, type LeadType } from "@/lib/lead-schema";
-import { type Locale } from "@/lib/locale";
-import { trackEvent, type AnalyticsEvent } from "@/lib/analytics";
+import { parseLeadSubmissionResponse } from "@/lib/lead-response";
+import { localizePath, type Locale } from "@/lib/locale";
+import { trackEvent } from "@/lib/analytics";
+import { isLegalPagePublished } from "@/lib/site-utils";
 
 type LeadFormProps = {
   leadType: LeadType;
   locale: Locale;
   courseInterest?: string;
+  courseSlug?: string;
+  resourceInterest?: string;
+  resourceSlug?: string;
+  showCourseInterestField?: boolean;
   compact?: boolean;
   corporate?: boolean;
   placement?: boolean;
@@ -22,29 +31,31 @@ type LeadFormProps = {
 
 type LeadFormFields = {
   fullName: string;
-  phone: string;
+  phone?: string;
   email?: string;
   preferredContactMethod: "phone" | "whatsapp" | "email";
   courseInterest?: string;
+  courseSlug?: string;
+  resourceInterest?: string;
+  resourceSlug?: string;
   companyName?: string;
   jobTitle?: string;
-  numberOfLearners?: string;
+  learnerCount?: string;
   trainingArea?: string;
   preferredDeliveryMode?: string;
-  currentGoal?: string;
-  preferredDateTime?: string;
+  englishLearningGoal?: string;
+  preferredTime?: string;
   message?: string;
   consent: boolean;
+  turnstileToken?: string;
   website?: string;
 };
 
-const eventByLeadType: Record<LeadType, AnalyticsEvent> = {
-  "general-enquiry": "general_enquiry_submit",
-  "course-enquiry": "course_enquiry_submit",
-  "placement-test-request": "placement_test_request_submit",
-  "corporate-training-enquiry": "corporate_enquiry_submit",
-  "resource-download": "resource_download"
-};
+declare global {
+  interface Window {
+    btiTurnstileCallback?: (token: string) => void;
+  }
+}
 
 function getUtmValue(key: string) {
   if (typeof window === "undefined") {
@@ -53,10 +64,16 @@ function getUtmValue(key: string) {
   return new URLSearchParams(window.location.search).get(key) ?? "";
 }
 
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
 export function LeadForm({
   leadType,
   locale,
   courseInterest,
+  courseSlug,
+  resourceInterest,
+  resourceSlug,
+  showCourseInterestField = false,
   compact = false,
   corporate = false,
   placement = false,
@@ -66,28 +83,48 @@ export function LeadForm({
   const pathname = usePathname();
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [referenceId, setReferenceId] = useState("");
   const {
     register,
     handleSubmit,
     reset,
     setError,
+    setValue,
     formState: { errors, isSubmitting }
   } = useForm<LeadFormFields>({
     defaultValues: {
       preferredContactMethod: "phone",
       courseInterest: courseInterest ?? "",
-      consent: false
+      courseSlug: courseSlug ?? "",
+      resourceInterest: resourceInterest ?? "",
+      resourceSlug: resourceSlug ?? "",
+      consent: false,
+      turnstileToken: ""
     }
   });
+
+  useEffect(() => {
+    window.btiTurnstileCallback = (token: string) => {
+      setValue("turnstileToken", token, { shouldValidate: true });
+    };
+
+    return () => {
+      window.btiTurnstileCallback = undefined;
+    };
+  }, [setValue]);
 
   async function onSubmit(rawValues: LeadFormFields) {
     setStatus("idle");
     setMessage("");
+    setReferenceId("");
 
     const payload = {
       ...rawValues,
       leadType,
       courseInterest: courseInterest ?? rawValues.courseInterest ?? "",
+      courseSlug: courseSlug ?? rawValues.courseSlug ?? "",
+      resourceInterest: resourceInterest ?? rawValues.resourceInterest ?? "",
+      resourceSlug: resourceSlug ?? rawValues.resourceSlug ?? "",
       locale,
       sourcePage: pathname,
       utmSource: getUtmValue("utm_source"),
@@ -108,31 +145,64 @@ export function LeadForm({
       return;
     }
 
-    const response = await fetch("/api/leads", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(parsed.data)
-    });
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(parsed.data)
+      });
+      const data = await parseLeadSubmissionResponse(response);
 
-    if (!response.ok) {
+      if (!data) {
+        trackEvent("lead_submission_failed", {
+          lead_type: parsed.data.leadType,
+          course_slug: parsed.data.courseSlug,
+          resource_slug: parsed.data.resourceSlug,
+          locale,
+          source_page: pathname
+        });
+        setStatus("error");
+        setMessage(
+          "We could not send your enquiry right now. Please call BTI or message the admissions team on WhatsApp."
+        );
+        return;
+      }
+
+      trackEvent(confirmedEventByLeadType[leadType], {
+        lead_type: parsed.data.leadType,
+        course_slug: parsed.data.courseSlug,
+        resource_slug: parsed.data.resourceSlug,
+        locale,
+        source_page: pathname,
+        delivery_status: data.deliveryStatus
+      });
+      setStatus("success");
+      setReferenceId(data.referenceId);
+      setMessage(
+        "Thank you. Your enquiry has been received. The admissions team will review your request and contact you using your preferred method."
+      );
+      reset({
+        preferredContactMethod: "phone",
+        courseInterest: courseInterest ?? "",
+        courseSlug: courseSlug ?? "",
+        resourceInterest: resourceInterest ?? "",
+        resourceSlug: resourceSlug ?? "",
+        consent: false,
+        turnstileToken: ""
+      });
+    } catch {
+      trackEvent("lead_submission_failed", {
+        lead_type: leadType,
+        course_slug: courseSlug,
+        resource_slug: resourceSlug,
+        locale,
+        source_page: pathname
+      });
       setStatus("error");
-      setMessage("We could not send your enquiry. Please call or WhatsApp BTI.");
-      return;
+      setMessage(
+        "We could not send your enquiry right now. Please call BTI or message the admissions team on WhatsApp."
+      );
     }
-
-    trackEvent(eventByLeadType[leadType], {
-      locale,
-      course_interest: parsed.data.courseInterest
-    });
-    setStatus("success");
-    setMessage(
-      "Thank you. Your enquiry has been received and admissions can follow up with the latest options."
-    );
-    reset({
-      preferredContactMethod: "phone",
-      courseInterest: courseInterest ?? "",
-      consent: false
-    });
   }
 
   return (
@@ -141,14 +211,21 @@ export function LeadForm({
       className={`surface grid gap-4 rounded-lg p-5 ${compact ? "" : "md:p-7"}`}
       noValidate
     >
+      {turnstileSiteKey ? (
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="afterInteractive"
+        />
+      ) : null}
+
       {title ? (
         <div>
           <h2 className="text-xl font-extrabold text-[var(--brand-navy)]">
             {title}
           </h2>
           <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">
-            BTI will use these details only to respond to your enquiry. This
-            form is CRM-ready and can connect to Odoo when approved.
+            BTI will use these details to respond to your enquiry and guide you
+            toward the most relevant next step.
           </p>
         </div>
       ) : null}
@@ -160,6 +237,10 @@ export function LeadForm({
         className="hidden"
         {...register("website")}
       />
+      <input type="hidden" {...register("courseSlug")} />
+      <input type="hidden" {...register("resourceInterest")} />
+      <input type="hidden" {...register("resourceSlug")} />
+      <input type="hidden" {...register("turnstileToken")} />
 
       <div className="grid gap-4 md:grid-cols-2">
         <label className="field-label">
@@ -202,7 +283,7 @@ export function LeadForm({
         </label>
       </div>
 
-      {!courseInterest && !corporate ? (
+      {showCourseInterestField && !corporate ? (
         <label className="field-label">
           Course interest
           <input
@@ -210,6 +291,11 @@ export function LeadForm({
             placeholder="English, IELTS, accounting, HR..."
             {...register("courseInterest")}
           />
+          {errors.courseInterest?.message ? (
+            <span className="form-error" role="alert">
+              {errors.courseInterest.message}
+            </span>
+          ) : null}
         </label>
       ) : null}
 
@@ -218,6 +304,11 @@ export function LeadForm({
           <label className="field-label">
             Company name
             <input className="field-control" autoComplete="organization" {...register("companyName")} />
+            {errors.companyName?.message ? (
+              <span className="form-error" role="alert">
+                {errors.companyName.message}
+              </span>
+            ) : null}
           </label>
           <label className="field-label">
             Job title
@@ -225,11 +316,21 @@ export function LeadForm({
           </label>
           <label className="field-label">
             Number of learners
-            <input className="field-control" {...register("numberOfLearners")} />
+            <input className="field-control" type="number" min="1" {...register("learnerCount")} />
+            {errors.learnerCount?.message ? (
+              <span className="form-error" role="alert">
+                {errors.learnerCount.message}
+              </span>
+            ) : null}
           </label>
           <label className="field-label">
             Training area
             <input className="field-control" {...register("trainingArea")} />
+            {errors.trainingArea?.message ? (
+              <span className="form-error" role="alert">
+                {errors.trainingArea.message}
+              </span>
+            ) : null}
           </label>
           <label className="field-label md:col-span-2">
             Preferred delivery mode
@@ -247,11 +348,21 @@ export function LeadForm({
         <div className="grid gap-4 md:grid-cols-2">
           <label className="field-label">
             Current English-learning goal
-            <input className="field-control" {...register("currentGoal")} />
+            <input className="field-control" {...register("englishLearningGoal")} />
+            {errors.englishLearningGoal?.message ? (
+              <span className="form-error" role="alert">
+                {errors.englishLearningGoal.message}
+              </span>
+            ) : null}
           </label>
           <label className="field-label">
             Preferred date or time range
-            <input className="field-control" {...register("preferredDateTime")} />
+            <input className="field-control" {...register("preferredTime")} />
+            {errors.preferredTime?.message ? (
+              <span className="form-error" role="alert">
+                {errors.preferredTime.message}
+              </span>
+            ) : null}
           </label>
         </div>
       ) : null}
@@ -263,7 +374,20 @@ export function LeadForm({
           placeholder="Tell admissions what you would like to learn or ask."
           {...register("message")}
         />
+        {errors.message?.message ? (
+          <span className="form-error" role="alert">
+            {errors.message.message}
+          </span>
+        ) : null}
       </label>
+
+      {turnstileSiteKey ? (
+        <div
+          className="cf-turnstile"
+          data-sitekey={turnstileSiteKey}
+          data-callback="btiTurnstileCallback"
+        />
+      ) : null}
 
       <label className="flex gap-3 rounded-lg bg-[var(--brand-soft)] p-3 text-sm font-semibold leading-6 text-[var(--brand-ink)]">
         <input
@@ -272,8 +396,20 @@ export function LeadForm({
           {...register("consent")}
         />
         <span>
-          I agree that {siteConfig.shortName} may contact me about this enquiry.
-          This is not a confirmed booking until admissions responds.
+          By submitting, you agree that {siteConfig.shortName} may contact you
+          about your enquiry. This is not a confirmed booking until admissions
+          responds.
+          {isLegalPagePublished("privacy") ? (
+            <>
+              {" "}
+              <Link
+                href={localizePath(locale, "/privacy")}
+                className="font-extrabold text-[var(--brand-red)] underline underline-offset-2"
+              >
+                Privacy notice
+              </Link>
+            </>
+          ) : null}
         </span>
       </label>
       {errors.consent?.message ? (
@@ -291,14 +427,38 @@ export function LeadForm({
         {isSubmitting ? "Sending..." : submitLabel}
       </button>
 
-      <p aria-live="polite" className="text-sm font-semibold">
+      <div aria-live="polite" className="text-sm font-semibold">
         {status === "success" ? (
-          <span className="text-[var(--brand-green)]">{message}</span>
+          <div className="grid gap-1 rounded-lg bg-green-50 p-3 text-[var(--brand-green)]">
+            <span>{message}</span>
+            <span>Reference: {referenceId}</span>
+          </div>
         ) : null}
         {status === "error" ? (
-          <span className="text-[var(--brand-red-dark)]">{message}</span>
+          <div
+            className="grid gap-3 rounded-lg bg-red-50 p-3 text-[var(--brand-red-dark)]"
+            role="alert"
+          >
+            <span>{message}</span>
+            <span className="flex flex-wrap gap-2">
+              <a
+                href={siteConfig.landlineHref}
+                className="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-extrabold text-[var(--brand-navy)]"
+              >
+                <Phone size={16} aria-hidden="true" />
+                Call {siteConfig.landlineDisplay}
+              </a>
+              <a
+                href={`https://wa.me/${siteConfig.whatsappNumber}`}
+                className="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-extrabold text-[var(--brand-navy)]"
+              >
+                <MessageCircle size={16} aria-hidden="true" />
+                WhatsApp admissions
+              </a>
+            </span>
+          </div>
         ) : null}
-      </p>
+      </div>
     </form>
   );
 }

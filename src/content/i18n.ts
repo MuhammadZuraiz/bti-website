@@ -13,6 +13,7 @@ export const dictionaries = {
       menu: "Menu"
     },
     common: {
+      skipToContent: "Skip to content",
       browseCourses: "Browse Courses",
       findCourse: "Find the Right Course",
       speakAdmissions: "Speak to Admissions",
@@ -22,8 +23,7 @@ export const dictionaries = {
       askAdmissions: "Ask Admissions",
       exploreProgramme: "Explore Programme",
       requestGuidance: "Request Course Guidance",
-      professionalReview:
-        "Arabic and legal-sensitive copy should be reviewed by BTI before production."
+      professionalReview: ""
     },
     home: {
       eyebrow: "Professional Training in Sharjah",
@@ -64,6 +64,7 @@ export const dictionaries = {
       menu: "القائمة"
     },
     common: {
+      skipToContent: "انتقل إلى المحتوى",
       browseCourses: "تصفح الدورات",
       findCourse: "اختر الدورة المناسبة",
       speakAdmissions: "تحدث مع القبول",
@@ -73,8 +74,7 @@ export const dictionaries = {
       askAdmissions: "اسأل القبول",
       exploreProgramme: "استكشف البرنامج",
       requestGuidance: "اطلب إرشاد الدورة",
-      professionalReview:
-        "تحتاج الترجمة العربية والنصوص القانونية إلى مراجعة مهنية قبل النشر."
+      professionalReview: ""
     },
     home: {
       eyebrow: "تدريب مهني في الشارقة",

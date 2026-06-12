@@ -5,12 +5,13 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { resources } from "@/content/resources";
 import { isLocale, type Locale } from "@/lib/locale";
 import { localizedMetadata } from "@/lib/metadata";
+import { isLocaleEnabled } from "@/lib/site-utils";
 
 type Params = Promise<{ locale: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
-  const locale = isLocale(rawLocale) ? rawLocale : "en";
+  const locale = isLocale(rawLocale) && isLocaleEnabled(rawLocale) ? rawLocale : "en";
   return localizedMetadata({
     locale,
     path: "/resources",
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function ResourcesPage({ params }: { params: Params }) {
   const { locale: rawLocale } = await params;
-  if (!isLocale(rawLocale)) {
+  if (!isLocale(rawLocale) || !isLocaleEnabled(rawLocale)) {
     notFound();
   }
   const locale: Locale = rawLocale;
@@ -33,7 +34,7 @@ export default async function ResourcesPage({ params }: { params: Params }) {
         <SectionHeading
           eyebrow="Resources"
           title="Start with a helpful guide."
-          intro="Available resources can be downloaded directly. Unavailable or approval-pending resources route visitors to admissions."
+          intro="Request course guides, IELTS preparation checklists and corporate-training resources from admissions."
         />
         <ResourceGrid resources={resources} locale={locale} />
       </div>

@@ -1,10 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { ExternalLink, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { courseCategories } from "@/content/courses";
 import type { dictionaries } from "@/content/i18n";
 import { localizePath, type Locale } from "@/lib/locale";
+import {
+  getAlternateEnabledLocale,
+  getPublishedLegalPages,
+  hasValidBusinessEmail,
+  hasValidSocialUrl
+} from "@/lib/site-utils";
 
 type FooterProps = {
   locale: Locale;
@@ -13,10 +19,17 @@ type FooterProps = {
 
 export function Footer({ locale, dictionary }: FooterProps) {
   const legalLinks = [
-    ["Privacy", "/privacy"],
-    ["Cookies", "/cookies"],
-    ["Terms", "/terms"],
-    ["Accessibility", "/accessibility"]
+    ["privacy", "Privacy", "/privacy"],
+    ["cookies", "Cookies", "/cookies"],
+    ["terms", "Terms", "/terms"],
+    ["accessibility", "Accessibility", "/accessibility"]
+  ] as const;
+  const publishedLegalPages = getPublishedLegalPages();
+  const alternateLocale = getAlternateEnabledLocale(locale);
+  const socialLinks = [
+    ["Instagram", siteConfig.socialLinks.instagram],
+    ["Facebook", siteConfig.socialLinks.facebook],
+    ["LinkedIn", siteConfig.socialLinks.linkedin]
   ] as const;
 
   const usefulLinks = [
@@ -68,11 +81,19 @@ export function Footer({ locale, dictionary }: FooterProps) {
               className="flex gap-2 hover:text-white"
               href={siteConfig.mobileHref}
             >
-              <MessageCircle size={18} /> {siteConfig.mobileDisplay}
+              <Phone size={18} /> {siteConfig.mobileDisplay}
             </a>
-            <a className="flex gap-2 hover:text-white" href={`mailto:${siteConfig.email}`}>
-              <Mail size={18} /> {siteConfig.email}
+            <a
+              className="flex gap-2 hover:text-white"
+              href={`https://wa.me/${siteConfig.whatsappNumber}`}
+            >
+              <MessageCircle size={18} /> WhatsApp BTI
             </a>
+            {hasValidBusinessEmail() ? (
+              <a className="flex gap-2 hover:text-white" href={`mailto:${siteConfig.email}`}>
+                <Mail size={18} /> {siteConfig.email}
+              </a>
+            ) : null}
           </div>
         </div>
 
@@ -103,23 +124,55 @@ export function Footer({ locale, dictionary }: FooterProps) {
         </div>
 
         <div>
-          <h2 className="text-sm font-extrabold uppercase tracking-[0.14em] text-white/70">
-            Legal & Local SEO
-          </h2>
-          <ul className="mt-4 grid gap-2 text-sm text-white/82">
-            {legalLinks.map(([label, href]) => (
-              <li key={href}>
-                <Link href={localizePath(locale, href)} className="hover:text-white">
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          {publishedLegalPages.length || alternateLocale ? (
+            <>
+              <h2 className="text-sm font-extrabold uppercase tracking-[0.14em] text-white/70">
+                Helpful Information
+              </h2>
+              <ul className="mt-4 grid gap-2 text-sm text-white/82">
+                {legalLinks
+                  .filter(([key]) => publishedLegalPages.includes(key))
+                  .map(([, label, href]) => (
+                    <li key={href}>
+                      <Link href={localizePath(locale, href)} className="hover:text-white">
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                {alternateLocale ? (
+                  <li>
+                    <Link
+                      href={localizePath(alternateLocale)}
+                      className="hover:text-white"
+                    >
+                      {alternateLocale.toUpperCase()}
+                    </Link>
+                  </li>
+                ) : null}
+              </ul>
+            </>
+          ) : null}
+          {socialLinks.some(([, url]) => hasValidSocialUrl(url)) ? (
+            <div className="mt-6 flex gap-2">
+              {socialLinks.map(([label, url]) =>
+                hasValidSocialUrl(url) ? (
+                  <a
+                    key={label}
+                    href={url}
+                    aria-label={label}
+                    className="grid h-10 w-10 place-items-center rounded-lg border border-white/15 text-white/82 hover:text-white"
+                  >
+                    <ExternalLink size={18} aria-hidden="true" />
+                  </a>
+                ) : null
+              )}
+            </div>
+          ) : null}
           <div className="mt-6 rounded-lg border border-white/15 bg-white/8 p-4 text-sm leading-6 text-white/78">
             <p className="font-bold text-white">{siteConfig.businessName}</p>
             <p>{siteConfig.address}</p>
             <p>{siteConfig.landlineDisplay}</p>
-            <p>{siteConfig.email}</p>
+            {hasValidBusinessEmail() ? <p>{siteConfig.email}</p> : null}
           </div>
         </div>
       </div>
@@ -129,7 +182,6 @@ export function Footer({ locale, dictionary }: FooterProps) {
             Copyright {new Date().getFullYear()} {siteConfig.businessName}. All
             rights reserved.
           </p>
-          <p>{dictionary.common.professionalReview}</p>
         </div>
       </div>
     </footer>

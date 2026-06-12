@@ -18,6 +18,8 @@ import {
 import type { LucideIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { ContextLink } from "@/components/conversion/context-link";
+import { OptionalImagePanel } from "@/components/media/optional-image-panel";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +36,7 @@ import {
   organizationSchema,
   websiteSchema
 } from "@/lib/schema";
+import { isResourcePublished } from "@/lib/site-utils";
 
 type HomePageProps = {
   locale: Locale;
@@ -55,7 +58,7 @@ const heroCards: { label: string; icon: LucideIcon }[] = [
   { label: "Course clarity", icon: BookOpen },
   { label: "Placement support", icon: ClipboardCheck },
   { label: "Corporate enquiries", icon: Building2 },
-  { label: "CRM-ready forms", icon: ShieldCheck }
+  { label: "Admissions enquiries", icon: ShieldCheck }
 ];
 
 const homeFaq = [
@@ -82,7 +85,7 @@ const homeFaq = [
   {
     question: "How do I enquire about course fees?",
     answer:
-      "Contact BTI admissions for current fee details. The website avoids publishing unverified fee information."
+      "Contact BTI admissions for current fee details and available options."
   },
   {
     question: "Where is BTI located in Sharjah?",
@@ -101,10 +104,10 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
       <JsonLd data={faqSchema(homeFaq)} />
 
       <section className="bg-[var(--brand-soft)]">
-        <div className="container-page grid min-h-[calc(100vh-80px)] items-center gap-10 py-12 lg:grid-cols-[1.05fr_0.95fr] lg:py-16">
+        <div className="container-page grid min-h-[calc(100vh-80px)] items-center gap-8 py-10 lg:grid-cols-[1.05fr_0.95fr] lg:py-14">
           <div>
             <Badge>{dictionary.home.eyebrow}</Badge>
-            <h1 className="text-balance mt-5 text-4xl font-black leading-[1.05] text-[var(--brand-navy)] md:text-6xl">
+            <h1 className="text-balance mt-5 text-4xl font-black leading-[1.05] text-[var(--brand-navy)] md:text-5xl xl:text-6xl">
               {dictionary.home.headline}
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--brand-muted)]">
@@ -124,44 +127,43 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
             </p>
           </div>
 
-          <div className="surface relative overflow-hidden rounded-lg p-6">
-            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(23,20,72,0.08),rgba(181,31,54,0.07))]" />
-            <div className="relative grid gap-5">
-              <div className="flex items-center gap-4 rounded-lg bg-white p-5 shadow-sm">
+          <div className="surface relative min-h-[460px] overflow-hidden rounded-lg">
+            <OptionalImagePanel
+              src="/images/hero-training.jpg"
+              alt="Professional training and admissions guidance at a Sharjah training centre"
+              fallbackTitle="Training guidance in Sharjah"
+              fallbackCopy="A focused admissions experience for learners, parents, professionals and corporate teams."
+              priority
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,20,72,0.05),rgba(23,20,72,0.78))]" />
+            <div className="absolute inset-x-5 bottom-5 grid gap-4">
+              <div className="flex max-w-xl items-center gap-4 rounded-lg bg-white/95 p-4 shadow-sm backdrop-blur">
                 <Image
                   src="/images/bti-logo.jpg"
-                  width={120}
-                  height={120}
+                  width={82}
+                  height={82}
                   alt="British Training Institute crest logo"
-                  className="h-24 w-24 rounded-full border border-[var(--brand-border)] object-contain"
+                  className="h-16 w-16 shrink-0 rounded-full border border-[var(--brand-border)] object-contain"
                   priority
                 />
                 <div>
-                  <p className="text-sm font-extrabold uppercase tracking-[0.14em] text-[var(--brand-red)]">
+                  <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--brand-red)]">
                     {siteConfig.shortName}
                   </p>
-                  <p className="mt-1 text-2xl font-black text-[var(--brand-navy)]">
-                    Admissions-ready training website
+                  <p className="mt-1 text-xl font-black text-[var(--brand-navy)]">
+                    Practical course guidance, clearer next steps.
                   </p>
                 </div>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {heroCards.map(({ label, icon: Icon }) => (
-                  <div key={label} className="rounded-lg bg-white p-4">
-                    <Icon size={24} className="text-[var(--brand-red)]" />
-                    <p className="mt-3 font-extrabold text-[var(--brand-navy)]">
+                  <div key={label} className="rounded-lg border border-white/18 bg-white/92 p-4 backdrop-blur">
+                    <Icon size={22} className="text-[var(--brand-red)]" />
+                    <p className="mt-2 font-extrabold text-[var(--brand-navy)]">
                       {label}
-                    </p>
-                    <p className="mt-1 text-sm leading-6 text-[var(--brand-muted)]">
-                      Built to turn visitor intent into a clear admissions next
-                      step.
                     </p>
                   </div>
                 ))}
-              </div>
-              <div className="rounded-lg border border-[var(--brand-border)] bg-[var(--brand-cream)] p-4 text-sm leading-6 text-[var(--brand-muted)]">
-                Approved photography can replace this polished placeholder
-                without changing the page layout.
               </div>
             </div>
           </div>
@@ -271,9 +273,12 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                   <ButtonLink href={localizePath(locale, `/courses/${course.slug}`)} variant="dark">
                     Explore Programme
                   </ButtonLink>
-                  <ButtonLink href={localizePath(locale, `/contact?course=${course.slug}`)} variant="secondary">
+                  <ContextLink
+                    href={localizePath(locale, `/contact?course=${course.slug}`)}
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--brand-border)] bg-white px-4 py-2.5 text-sm font-bold text-[var(--brand-navy)] transition hover:border-[var(--brand-red)]"
+                  >
                     Ask Admissions
-                  </ButtonLink>
+                  </ContextLink>
                 </div>
               </article>
             ))}
@@ -357,17 +362,20 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                 <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">
                   {resource.description}
                 </p>
-                {resource.isAvailable && resource.fileUrl ? (
+                {isResourcePublished(resource) ? (
                   <Link
-                    href={resource.fileUrl}
+                    href={resource.fileUrl as string}
                     className="mt-5 inline-flex text-sm font-extrabold text-[var(--brand-red)]"
                   >
                     Download guide
                   </Link>
                 ) : (
-                  <p className="mt-5 text-sm font-extrabold text-[var(--brand-navy)]">
+                  <ContextLink
+                    href={localizePath(locale, `/contact?resource=${resource.slug}`)}
+                    className="mt-5 inline-flex text-sm font-extrabold text-[var(--brand-red)]"
+                  >
                     Request this guide from admissions.
-                  </p>
+                  </ContextLink>
                 )}
               </article>
             ))}

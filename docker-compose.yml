@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: bti-website-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bti
+      POSTGRES_PASSWORD: bti_local_password
+      POSTGRES_DB: bti_website
+    ports:
+      # Override with POSTGRES_PORT when another PostgreSQL already uses 5432.
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - bti-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bti -d bti_website"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  bti-postgres-data:

@@ -5,14 +5,15 @@ import { LeadForm } from "@/components/forms/lead-form";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ButtonLink } from "@/components/ui/button-link";
 import { siteConfig } from "@/config/site";
-import { isLocale, localizePath, type Locale } from "@/lib/locale";
+import { isLocale, type Locale } from "@/lib/locale";
 import { localizedMetadata } from "@/lib/metadata";
+import { isLocaleEnabled } from "@/lib/site-utils";
 
 type Params = Promise<{ locale: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
-  const locale = isLocale(rawLocale) ? rawLocale : "en";
+  const locale = isLocale(rawLocale) && isLocaleEnabled(rawLocale) ? rawLocale : "en";
   return localizedMetadata({
     locale,
     path: "/placement-test",
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function PlacementTestPage({ params }: { params: Params }) {
   const { locale: rawLocale } = await params;
-  if (!isLocale(rawLocale)) {
+  if (!isLocale(rawLocale) || !isLocaleEnabled(rawLocale)) {
     notFound();
   }
   const locale: Locale = rawLocale;

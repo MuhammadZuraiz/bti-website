@@ -1,8 +1,12 @@
 .next
 node_modules
+.pnpm-store
 coverage
 dist
 .env
 .env*.local
 .tools
 *.tsbuildinfo
+dev-server*.log
+next-dev*.log
+exports/

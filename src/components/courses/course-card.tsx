@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import { ContextLink } from "@/components/conversion/context-link";
 import type { Course } from "@/types/course";
 import { trackEvent } from "@/lib/analytics";
 import { localizePath, type Locale } from "@/lib/locale";
@@ -42,13 +43,13 @@ export function CourseCard({ course, locale }: CourseCardProps) {
           Explore
           <ArrowUpRight size={16} aria-hidden="true" />
         </Link>
-        <Link
+        <ContextLink
           href={localizePath(locale, `/contact?course=${course.slug}`)}
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm font-extrabold text-[var(--brand-navy)]"
         >
           Ask
           <MessageCircle size={16} aria-hidden="true" />
-        </Link>
+        </ContextLink>
       </div>
     </article>
   );

@@ -1,17 +1,45 @@
-import { FlatCompat } from "@eslint/eslintrc";
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname
-});
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
-    ignores: [".next/**", "node_modules/**", "coverage/**", ".tools/**"]
+    ignores: [
+      ".next/**",
+      "node_modules/**",
+      ".pnpm-store/**",
+      "coverage/**",
+      "exports/**",
+      ".tools/**",
+      "public/**",
+      "next-env.d.ts"
+    ]
+  },
+  ...nextCoreWebVitals,
+  ...nextTypescript,
+  {
+    files: ["**/*.{js,mjs,cjs,ts,tsx}"],
+    rules: {
+      "no-debugger": "error",
+      "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
+      "no-var": "error",
+      "prefer-const": "error"
+    }
+  },
+  {
+    files: ["**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          args: "all",
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_"
+        }
+      ],
+      "@typescript-eslint/no-unused-expressions": "error",
+      "@typescript-eslint/no-explicit-any": "error"
+    }
   }
 ];
 

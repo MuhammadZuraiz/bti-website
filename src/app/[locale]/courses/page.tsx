@@ -4,6 +4,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { courses } from "@/content/courses";
 import { isLocale, type Locale } from "@/lib/locale";
 import { localizedMetadata } from "@/lib/metadata";
+import { isLocaleEnabled } from "@/lib/site-utils";
 import { notFound } from "next/navigation";
 
 type Params = Promise<{ locale: string }>;
@@ -15,7 +16,7 @@ export async function generateMetadata({
   params: Params;
 }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
-  const locale = isLocale(rawLocale) ? rawLocale : "en";
+  const locale = isLocale(rawLocale) && isLocaleEnabled(rawLocale) ? rawLocale : "en";
   return localizedMetadata({
     locale,
     path: "/courses",
@@ -38,7 +39,7 @@ export default async function CoursesPage({
 }) {
   const { locale: rawLocale } = await params;
   const resolvedSearchParams = await searchParams;
-  if (!isLocale(rawLocale)) {
+  if (!isLocale(rawLocale) || !isLocaleEnabled(rawLocale)) {
     notFound();
   }
   const locale: Locale = rawLocale;
@@ -49,7 +50,7 @@ export default async function CoursesPage({
         <SectionHeading
           eyebrow="Course catalogue"
           title="Compare training options in Sharjah."
-          intro="Search by category, learner type, delivery mode, or topic. Course pages avoid unverified fees, schedules, and guarantees so admissions can confirm the latest details."
+          intro="Search by category, learner type, delivery mode, or topic. Speak with admissions for current schedules, availability and fee details."
         />
         <CourseCatalogue
           courses={courses}

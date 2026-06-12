@@ -8,7 +8,10 @@
 - Review privacy, cookies, terms and accessibility pages.
 - Confirm all optional trust claims before enabling feature flags.
 - Test all lead forms.
+- Configure PostgreSQL and run `pnpm db:deploy`.
+- Configure Turnstile and Redis rate limiting.
 - Configure Odoo or generic lead webhook.
+- Configure retry cron for queued lead delivery.
 - Configure analytics only after cookie decision.
 - Run lint, type-check, tests and production build.
 - Submit sitemap to Search Console.
