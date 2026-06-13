@@ -107,10 +107,10 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
         <div className="container-page grid min-h-[calc(100vh-80px)] items-center gap-8 py-10 lg:grid-cols-[1.05fr_0.95fr] lg:py-14">
           <div>
             <Badge>{dictionary.home.eyebrow}</Badge>
-            <h1 className="text-balance mt-5 text-4xl font-black leading-[1.05] text-[var(--brand-navy)] md:text-5xl xl:text-6xl">
+            <h1 className="hero-title text-balance mt-5">
               {dictionary.home.headline}
             </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--brand-muted)]">
+            <p className="body-large mt-5 max-w-2xl">
               {dictionary.home.intro}
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -122,17 +122,18 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                 {dictionary.common.speakAdmissions}
               </ButtonLink>
             </div>
-            <p className="mt-5 max-w-xl text-sm font-semibold leading-6 text-[var(--brand-muted)]">
+            <p className="helper-text mt-5 max-w-xl font-semibold">
               {dictionary.home.microcopy}
             </p>
           </div>
 
-          <div className="surface relative min-h-[460px] overflow-hidden rounded-lg">
+          <div className="featured-card relative min-h-[460px] overflow-hidden rounded-lg">
             <OptionalImagePanel
               src="/images/hero-training.jpg"
               alt="Professional training and admissions guidance at a Sharjah training centre"
               fallbackTitle="Training guidance in Sharjah"
               fallbackCopy="A focused admissions experience for learners, parents, professionals and corporate teams."
+              fallbackPosition="top"
               priority
             />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,20,72,0.05),rgba(23,20,72,0.78))]" />
@@ -147,10 +148,10 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                   priority
                 />
                 <div>
-                  <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--brand-red)]">
+                  <p className="meta-label text-[var(--brand-red)]">
                     {siteConfig.shortName}
                   </p>
-                  <p className="mt-1 text-xl font-black text-[var(--brand-navy)]">
+                  <p className="card-title mt-1 text-xl">
                     Practical course guidance, clearer next steps.
                   </p>
                 </div>
@@ -159,7 +160,7 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                 {heroCards.map(({ label, icon: Icon }) => (
                   <div key={label} className="rounded-lg border border-white/18 bg-white/92 p-4 backdrop-blur">
                     <Icon size={22} className="text-[var(--brand-red)]" />
-                    <p className="mt-2 font-extrabold text-[var(--brand-navy)]">
+                    <p className="mt-2 text-sm font-semibold text-[var(--brand-navy)]">
                       {label}
                     </p>
                   </div>
@@ -194,13 +195,13 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                 <Link
                   key={course.slug}
                   href={localizePath(locale, `/courses/${course.slug}`)}
-                  className="surface group rounded-lg p-5 transition hover:-translate-y-1 hover:border-[var(--brand-red)]"
+                  className={`${index < 2 ? "featured-card" : "compact-card"} group rounded-lg p-5 transition hover:-translate-y-0.5 hover:border-[var(--brand-red)]`}
                 >
                   <Icon size={28} className="text-[var(--brand-red)]" />
-                  <h3 className="mt-4 text-lg font-extrabold text-[var(--brand-navy)]">
+                  <h3 className="card-title mt-4">
                     {course.category}
                   </h3>
-                  <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">
+                  <p className="helper-text mt-2">
                     {course.shortDescription}
                   </p>
                 </Link>
@@ -228,21 +229,21 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                 "Request a corporate-training conversation shaped around your team's needs."
               ]
             ].map(([before, after], index) => (
-              <article key={before} className="surface rounded-lg p-6">
-                <p className="text-sm font-extrabold text-[var(--brand-red)]">
+              <article key={before} className="timeline-item rounded-lg p-6">
+                <p className="meta-label text-[var(--brand-red)]">
                   Step {index + 1}
                 </p>
-                <p className="mt-4 text-sm font-bold uppercase tracking-[0.1em] text-[var(--brand-muted)]">
+                <p className="meta-label mt-4">
                   Before
                 </p>
-                <p className="mt-2 text-lg font-extrabold text-[var(--brand-navy)]">
+                <p className="card-title mt-2">
                   {before}
                 </p>
                 <div className="my-5 h-px bg-[var(--brand-border)]" />
-                <p className="text-sm font-bold uppercase tracking-[0.1em] text-[var(--brand-green)]">
+                <p className="meta-label text-[var(--brand-green)]">
                   After
                 </p>
-                <p className="mt-2 text-base leading-7 text-[var(--brand-muted)]">
+                <p className="supporting-copy mt-2">
                   {after}
                 </p>
               </article>
@@ -256,17 +257,17 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
           <SectionHeading title={dictionary.home.featuredTitle} />
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {featuredCourses.map((course) => (
-              <article key={course.slug} className="surface flex h-full flex-col rounded-lg p-5">
-                <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--brand-red)]">
+              <article key={course.slug} className="compact-card flex h-full flex-col rounded-lg p-5">
+                <p className="meta-label text-[var(--brand-red)]">
                   {course.category}
                 </p>
-                <h3 className="mt-3 text-xl font-extrabold text-[var(--brand-navy)]">
+                <h3 className="card-title mt-3">
                   {course.title}
                 </h3>
-                <p className="mt-3 flex-1 text-sm leading-6 text-[var(--brand-muted)]">
+                <p className="helper-text mt-3 flex-1">
                   {course.shortDescription}
                 </p>
-                <p className="mt-4 text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--brand-muted)]">
+                <p className="meta-label mt-4">
                   For {course.audience[0]}
                 </p>
                 <div className="mt-5 grid gap-2">
@@ -275,7 +276,7 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                   </ButtonLink>
                   <ContextLink
                     href={localizePath(locale, `/contact?course=${course.slug}`)}
-                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--brand-border)] bg-white px-4 py-2.5 text-sm font-bold text-[var(--brand-navy)] transition hover:border-[var(--brand-red)]"
+                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-[var(--brand-red)] transition hover:bg-[var(--brand-soft)]"
                   >
                     Ask Admissions
                   </ContextLink>
@@ -292,7 +293,7 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
             <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.14em] text-white/60">
               Admissions journey
             </p>
-            <h2 className="text-balance text-3xl font-extrabold leading-tight text-white md:text-4xl">
+            <h2 className="section-title on-dark text-balance">
               {dictionary.home.journeyTitle}
             </h2>
             <p className="mt-4 text-base leading-7 text-white/72 md:text-lg">
@@ -309,7 +310,7 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
             ].map(([title, copy], index) => (
               <div key={title} className="rounded-lg border border-white/15 bg-white/8 p-5">
                 <p className="text-3xl font-black text-white/35">0{index + 1}</p>
-                <h3 className="mt-4 text-lg font-extrabold">{title}</h3>
+                <h3 className="mt-4 text-lg font-semibold">{title}</h3>
                 <p className="mt-2 text-sm leading-6 text-white/72">{copy}</p>
               </div>
             ))}
@@ -322,24 +323,24 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
 
       <section className="py-16">
         <div className="container-page grid gap-6 lg:grid-cols-2">
-          <div className="surface rounded-lg p-7">
+          <div className="featured-card rounded-lg p-7">
             <ClipboardCheck size={34} className="text-[var(--brand-red)]" />
-            <h2 className="mt-4 text-3xl font-extrabold text-[var(--brand-navy)]">
+            <h2 className="section-title mt-4">
               {dictionary.home.placementTitle}
             </h2>
-            <p className="mt-3 leading-7 text-[var(--brand-muted)]">
+            <p className="supporting-copy mt-3">
               {dictionary.home.placementCopy}
             </p>
             <ButtonLink href={localizePath(locale, "/placement-test")} className="mt-6">
               Request a Placement Test
             </ButtonLink>
           </div>
-          <div className="surface rounded-lg bg-[var(--brand-cream)] p-7">
+          <div className="split-panel rounded-lg p-7">
             <Building2 size={34} className="text-[var(--brand-red)]" />
-            <h2 className="mt-4 text-3xl font-extrabold text-[var(--brand-navy)]">
+            <h2 className="section-title mt-4">
               {dictionary.home.corporateTitle}
             </h2>
-            <p className="mt-3 leading-7 text-[var(--brand-muted)]">
+            <p className="supporting-copy mt-3">
               {dictionary.home.corporateCopy}
             </p>
             <ButtonLink href={localizePath(locale, "/corporate-training")} className="mt-6">
@@ -354,12 +355,12 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
           <SectionHeading title={dictionary.home.resourcesTitle} />
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {resources.slice(0, 4).map((resource) => (
-              <article key={resource.slug} className="surface rounded-lg p-5">
+              <article key={resource.slug} className="compact-card rounded-lg p-5">
                 <FileText size={26} className="text-[var(--brand-red)]" />
-                <h3 className="mt-4 text-lg font-extrabold text-[var(--brand-navy)]">
+                <h3 className="card-title mt-4">
                   {resource.title}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">
+                <p className="helper-text mt-2">
                   {resource.description}
                 </p>
                 {isResourcePublished(resource) ? (
@@ -388,11 +389,11 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
           <SectionHeading title={dictionary.home.faqTitle} />
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             {homeFaq.map((item) => (
-              <article key={item.question} className="surface rounded-lg p-5">
-                <h3 className="font-extrabold text-[var(--brand-navy)]">
+              <article key={item.question} className="text-row">
+                <h3 className="card-title">
                   {item.question}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">
+                <p className="helper-text mt-2">
                   {item.answer}
                 </p>
               </article>
@@ -405,12 +406,12 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
       </section>
 
       <section className="bg-[var(--brand-soft)] py-16">
-        <div className="container-page surface grid gap-6 rounded-lg p-7 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div className="container-page split-panel grid gap-6 rounded-lg p-7 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
-            <h2 className="text-3xl font-extrabold text-[var(--brand-navy)]">
+            <h2 className="section-title">
               {dictionary.home.finalTitle}
             </h2>
-            <p className="mt-3 max-w-2xl leading-7 text-[var(--brand-muted)]">
+            <p className="supporting-copy mt-3 max-w-2xl">
               {dictionary.home.finalCopy}
             </p>
           </div>

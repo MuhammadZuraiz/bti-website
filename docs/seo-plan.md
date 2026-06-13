@@ -28,7 +28,28 @@
 
 ## Metadata Summary
 
-Route-specific metadata is created with `localizedMetadata` in `src/lib/metadata.ts`. Each major page includes canonical URLs, locale alternates, Open Graph and Twitter metadata.
+Route-specific metadata is created with `localizedMetadata` in `src/lib/metadata.ts`. Each major page includes canonical URLs, locale alternates, Open Graph and Twitter metadata. Indexing is environment-gated: only builds made with `DEPLOYMENT_ENV=production` emit indexable metadata, an allowing robots.txt and a populated sitemap (`src/lib/seo.ts`, `src/config/deployment.ts`).
+
+## Structured Data (JSON-LD)
+
+Emitted by `src/lib/schema.ts` and rendered through `JsonLd`:
+
+- Home: `EducationalOrganization` (E.164 phone, logo, postal address, admissions contact point, approved `sameAs` links only) and `WebSite`.
+- Course pages: `Course` (no prices, ratings or guarantees), `FAQPage`, `BreadcrumbList`.
+- FAQ page: `FAQPage`.
+
+Schema output is unit-tested in `tests/schema.test.ts` (including "no
+aggregateRating / reviews / foundingDate" guards).
+
+### Validate before launch
+
+1. Build and serve with production env, or use the staging URL.
+2. Paste each page URL (or its rendered HTML) into the Schema.org validator
+   (validator.schema.org) and Google's Rich Results Test
+   (search.google.com/test/rich-results).
+3. Confirm zero errors for: home, one course page, the FAQ page.
+4. Re-validate whenever `src/lib/schema.ts`, contact details or course
+   content change.
 
 ## Local SEO Checklist
 

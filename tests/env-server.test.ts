@@ -70,4 +70,57 @@ describe("server environment validation", () => {
     });
     expect(result.ok).toBe(true);
   });
+
+  it("rejects an invalid DEPLOYMENT_ENV value", () => {
+    const result = validateServerEnv({
+      ...productionEnv,
+      DEPLOYMENT_ENV: "prod"
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it("applies full production rules when DEPLOYMENT_ENV is production", () => {
+    const result = validateServerEnv({
+      ...productionEnv,
+      NODE_ENV: "test",
+      DEPLOYMENT_ENV: "production",
+      DATABASE_URL: ""
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it("requires an HTTPS non-example canonical URL in staging", () => {
+    const base = {
+      NODE_ENV: "test",
+      DEPLOYMENT_ENV: "staging"
+    } as NodeJS.ProcessEnv;
+
+    expect(validateServerEnv(base).ok).toBe(false);
+    expect(
+      validateServerEnv({
+        ...base,
+        NEXT_PUBLIC_SITE_URL: "http://staging.bti.example"
+      }).ok
+    ).toBe(false);
+    expect(
+      validateServerEnv({
+        ...base,
+        NEXT_PUBLIC_SITE_URL: "https://example.com"
+      }).ok
+    ).toBe(false);
+    expect(
+      validateServerEnv({
+        ...base,
+        NEXT_PUBLIC_SITE_URL: "https://staging.bti.example"
+      }).ok
+    ).toBe(true);
+  });
+
+  it("does not demand production secrets in preview", () => {
+    const result = validateServerEnv({
+      NODE_ENV: "test",
+      DEPLOYMENT_ENV: "preview"
+    } as NodeJS.ProcessEnv);
+    expect(result.ok).toBe(true);
+  });
 });

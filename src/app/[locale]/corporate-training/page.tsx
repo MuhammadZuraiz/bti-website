@@ -43,10 +43,10 @@ export default async function CorporateTrainingPage({ params }: { params: Params
       <section className="bg-[var(--brand-navy)] py-14 text-white">
         <div className="container-page grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
-            <p className="text-sm font-extrabold uppercase tracking-[0.14em] text-white/70">
+            <p className="eyebrow on-dark-muted">
               Corporate training
             </p>
-            <h1 className="text-balance mt-4 text-4xl font-black leading-tight md:text-5xl">
+            <h1 className="page-title on-dark text-balance mt-4">
               Develop your team with training aligned to real workplace needs.
             </h1>
             <p className="mt-5 text-lg leading-8 text-white/75">
@@ -60,7 +60,7 @@ export default async function CorporateTrainingPage({ params }: { params: Params
           </div>
           <div className="rounded-lg border border-white/15 bg-white/8 p-6">
             <Building2 size={44} className="text-white" />
-            <h2 className="mt-4 text-2xl font-extrabold">Built for B2B enquiry clarity</h2>
+            <h2 className="mt-4 text-2xl font-semibold">A clearer starting point for team training.</h2>
             <p className="mt-3 leading-7 text-white/72">
               Capture team size, training area, preferred mode, and business
               context before a proposal conversation begins.
@@ -76,8 +76,8 @@ export default async function CorporateTrainingPage({ params }: { params: Params
               title="Training areas and potential use cases"
               intro="BTI can discuss skills-based training needs for organisations, teams, and institutions."
             />
-            <div className="surface rounded-lg p-6">
-              <h2 className="text-xl font-extrabold text-[var(--brand-navy)]">Training areas</h2>
+            <div className="featured-card rounded-lg p-6">
+              <h2 className="card-title text-xl">Training areas</h2>
               <div className="mt-4 grid gap-3">
                 {trainingAreas.map((area) => (
                   <p key={area} className="flex gap-2 text-[var(--brand-muted)]">
@@ -87,8 +87,8 @@ export default async function CorporateTrainingPage({ params }: { params: Params
                 ))}
               </div>
             </div>
-            <div className="surface rounded-lg p-6">
-              <h2 className="text-xl font-extrabold text-[var(--brand-navy)]">How the process works</h2>
+            <div className="muted-panel rounded-lg p-6">
+              <h2 className="card-title text-xl">How the process works</h2>
               <ol className="mt-4 grid gap-3 text-sm leading-6 text-[var(--brand-muted)]">
                 <li>1. Share your organisation, learner count, and training goal.</li>
                 <li>2. BTI reviews the request and discusses current options.</li>

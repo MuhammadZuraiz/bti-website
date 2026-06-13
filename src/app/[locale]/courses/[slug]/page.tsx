@@ -66,7 +66,7 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
 
   return (
     <>
-      <JsonLd data={courseSchema(course)} />
+      <JsonLd data={courseSchema(course, locale)} />
       <JsonLd data={faqSchema(course.faq)} />
       <JsonLd
         data={breadcrumbSchema([
@@ -87,10 +87,10 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
           <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
               <Badge>{course.category}</Badge>
-              <h1 className="text-balance mt-5 text-4xl font-black leading-tight text-[var(--brand-navy)] md:text-5xl">
+              <h1 className="page-title text-balance mt-5">
                 {course.title}
               </h1>
-              <p className="mt-5 text-lg leading-8 text-[var(--brand-muted)]">
+              <p className="body-large mt-5">
                 {course.overview}
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -99,32 +99,32 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
                 </ButtonLink>
                 <ButtonLink
                   href={`https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(`I would like to ask about ${course.title}.`)}`}
-                  variant="secondary"
+                  variant="ghost"
                 >
                   <MessageCircle size={18} />
                   WhatsApp About This Course
                 </ButtonLink>
               </div>
             </div>
-            <aside className="surface rounded-lg p-5">
-              <h2 className="text-xl font-extrabold text-[var(--brand-navy)]">
+            <aside className="featured-card rounded-lg p-5">
+              <h2 className="card-title text-xl">
                 Course information
               </h2>
               <dl className="mt-4 grid gap-4 text-sm">
                 <div>
-                  <dt className="font-extrabold text-[var(--brand-ink)]">Duration</dt>
+                  <dt className="font-semibold text-[var(--brand-ink)]">Duration</dt>
                   <dd className="mt-1 text-[var(--brand-muted)]">{course.durationText}</dd>
                 </div>
                 <div>
-                  <dt className="font-extrabold text-[var(--brand-ink)]">Schedule</dt>
+                  <dt className="font-semibold text-[var(--brand-ink)]">Schedule</dt>
                   <dd className="mt-1 text-[var(--brand-muted)]">{course.scheduleText}</dd>
                 </div>
                 <div>
-                  <dt className="font-extrabold text-[var(--brand-ink)]">Fees</dt>
+                  <dt className="font-semibold text-[var(--brand-ink)]">Fees</dt>
                   <dd className="mt-1 text-[var(--brand-muted)]">{course.feeText}</dd>
                 </div>
                 <div>
-                  <dt className="font-extrabold text-[var(--brand-ink)]">Certificate</dt>
+                  <dt className="font-semibold text-[var(--brand-ink)]">Certificate</dt>
                   <dd className="mt-1 text-[var(--brand-muted)]">{course.certificateText}</dd>
                 </div>
               </dl>
@@ -136,16 +136,16 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
       <section className="py-14">
         <div className="container-page grid gap-8 lg:grid-cols-[1fr_0.95fr]">
           <div className="grid gap-8">
-            <article className="surface rounded-lg p-6">
-              <h2 className="text-2xl font-extrabold text-[var(--brand-navy)]">
+            <article className="split-panel rounded-lg p-6">
+              <h2 className="section-title">
                 Programme overview
               </h2>
-              <p className="mt-3 leading-7 text-[var(--brand-muted)]">
+              <p className="supporting-copy mt-3">
                 {course.overview}
               </p>
             </article>
-            <article className="surface rounded-lg p-6">
-              <h2 className="text-2xl font-extrabold text-[var(--brand-navy)]">
+            <article className="compact-card rounded-lg p-6">
+              <h2 className="section-title">
                 Who this programme may suit
               </h2>
               <ul className="mt-4 grid gap-3">
@@ -157,8 +157,8 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
                 ))}
               </ul>
             </article>
-            <article className="surface rounded-lg p-6">
-              <h2 className="text-2xl font-extrabold text-[var(--brand-navy)]">
+            <article className="compact-card rounded-lg p-6">
+              <h2 className="section-title">
                 What learners can work toward
               </h2>
               <ul className="mt-4 grid gap-3">
@@ -170,15 +170,15 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
                 ))}
               </ul>
             </article>
-            <article className="surface rounded-lg p-6">
-              <h2 className="text-2xl font-extrabold text-[var(--brand-navy)]">
+            <article className="muted-panel rounded-lg p-6">
+              <h2 className="section-title">
                 Delivery modes
               </h2>
               <div className="mt-4 flex flex-wrap gap-2">
                 {course.deliveryModes.map((mode) => (
                   <span
                     key={mode}
-                    className="rounded-full bg-[var(--brand-soft)] px-3 py-1 text-sm font-extrabold text-[var(--brand-navy)]"
+                    className="rounded-full bg-white px-3 py-1 text-sm font-semibold text-[var(--brand-navy)]"
                   >
                     {mode}
                   </span>
@@ -189,17 +189,17 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
                 the latest schedule, availability, and fee details.
               </p>
             </article>
-            <article className="surface rounded-lg p-6">
-              <h2 className="text-2xl font-extrabold text-[var(--brand-navy)]">
+            <article className="compact-card rounded-lg p-6">
+              <h2 className="section-title">
                 Course FAQ
               </h2>
               <div className="mt-4 grid gap-4">
                 {course.faq.map((item) => (
-                  <div key={item.question}>
-                    <h3 className="font-extrabold text-[var(--brand-navy)]">
+                  <div key={item.question} className="text-row first:border-t-0 first:pt-0">
+                    <h3 className="card-title">
                       {item.question}
                     </h3>
-                    <p className="mt-1 text-sm leading-6 text-[var(--brand-muted)]">
+                    <p className="helper-text mt-1">
                       {item.answer}
                     </p>
                   </div>
@@ -217,8 +217,8 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
               title="Ask admissions about this programme"
               submitLabel="Ask Admissions"
             />
-            <article className="surface rounded-lg p-5">
-              <h2 className="text-xl font-extrabold text-[var(--brand-navy)]">
+            <article className="muted-panel rounded-lg p-5">
+              <h2 className="card-title text-xl">
                 Related programmes
               </h2>
               <div className="mt-4 grid gap-2">
@@ -226,7 +226,7 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
                   <Link
                     key={related.slug}
                     href={localizePath(locale, `/courses/${related.slug}`)}
-                    className="rounded-lg border border-[var(--brand-border)] p-3 text-sm font-extrabold text-[var(--brand-navy)] hover:border-[var(--brand-red)]"
+                    className="rounded-lg border border-[var(--brand-border)] bg-white p-3 text-sm font-semibold text-[var(--brand-navy)] hover:border-[var(--brand-red)]"
                   >
                     {related.title}
                   </Link>

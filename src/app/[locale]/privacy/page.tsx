@@ -28,5 +28,9 @@ export default async function PrivacyPage({ params }: { params: Params }) {
     notFound();
   }
 
+  if (!isLegalPagePublished("privacy")) {
+    notFound();
+  }
+
   return <LegalNoticePage pageKey="privacy" content={legalPageContent.privacy} />;
 }

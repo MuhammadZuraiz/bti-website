@@ -44,22 +44,23 @@ export default async function ContactPage({
     <section className="py-14">
       <div className="container-page grid gap-10">
         <SectionHeading
+          as="h1"
           eyebrow="Contact BTI"
           title="Speak with BTI in Sharjah."
           intro="Ask about course options, placement-test guidance, corporate training, schedules, and current availability."
         />
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="grid content-start gap-6">
-            <article className="surface rounded-lg p-6">
+            <article className="featured-card rounded-lg p-6">
               <MapPin size={30} className="text-[var(--brand-red)]" />
-              <h2 className="mt-4 text-2xl font-extrabold text-[var(--brand-navy)]">Visit or contact</h2>
-              <p className="mt-3 leading-7 text-[var(--brand-muted)]">{siteConfig.address}</p>
+              <h2 className="section-title mt-4">Visit or contact</h2>
+              <p className="supporting-copy mt-3">{siteConfig.address}</p>
               <ContactActions />
             </article>
             {siteConfig.openingHours.length ? (
-              <article className="surface rounded-lg p-6">
+              <article className="muted-panel rounded-lg p-6">
                 <Info size={28} className="text-[var(--brand-red)]" />
-                <h2 className="mt-4 text-xl font-extrabold text-[var(--brand-navy)]">
+                <h2 className="card-title mt-4">
                   Opening hours
                 </h2>
                 <ul className="mt-3 grid gap-2 text-sm leading-6 text-[var(--brand-muted)]">
@@ -70,9 +71,9 @@ export default async function ContactPage({
               </article>
             ) : null}
             {siteConfig.parkingNotes || siteConfig.landmarkNotes ? (
-              <article className="surface rounded-lg p-6">
+              <article className="muted-panel rounded-lg p-6">
                 <Info size={28} className="text-[var(--brand-red)]" />
-                <h2 className="mt-4 text-xl font-extrabold text-[var(--brand-navy)]">
+                <h2 className="card-title mt-4">
                   Visiting BTI
                 </h2>
                 {siteConfig.landmarkNotes ? (
@@ -87,8 +88,8 @@ export default async function ContactPage({
                 ) : null}
               </article>
             ) : null}
-            <article className="surface rounded-lg p-6">
-              <h2 className="text-xl font-extrabold text-[var(--brand-navy)]">What happens next?</h2>
+            <article className="muted-panel rounded-lg p-6">
+              <h2 className="card-title text-xl">What happens next?</h2>
               <ol className="mt-4 grid gap-3 text-sm leading-6 text-[var(--brand-muted)]">
                 <li>1. Submit your enquiry.</li>
                 <li>2. An admissions team member reviews your request.</li>
@@ -96,8 +97,8 @@ export default async function ContactPage({
               </ol>
             </article>
             {hasValidMapUrl() ? (
-              <article className="surface rounded-lg bg-[var(--brand-soft)] p-6">
-                <h2 className="text-xl font-extrabold text-[var(--brand-navy)]">
+              <article className="muted-panel rounded-lg p-6">
+                <h2 className="card-title text-xl">
                   Directions
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">

@@ -32,10 +32,18 @@ export default async function ResourcesPage({ params }: { params: Params }) {
     <section className="py-14">
       <div className="container-page grid gap-8">
         <SectionHeading
+          as="h1"
           eyebrow="Resources"
           title="Start with a helpful guide."
           intro="Request course guides, IELTS preparation checklists and corporate-training resources from admissions."
         />
+        <div className="muted-panel rounded-lg p-5 md:p-6">
+          <p className="supporting-copy max-w-3xl">
+            Use these resources to prepare better questions before speaking with
+            admissions. Available guides open directly; unavailable guides can be
+            requested through the enquiry flow.
+          </p>
+        </div>
         <ResourceGrid resources={resources} locale={locale} />
       </div>
     </section>

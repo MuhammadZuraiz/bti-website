@@ -12,9 +12,10 @@ export function LegalNoticePage({
 }) {
   if (!isLegalPagePublished(pageKey)) {
     return (
-      <section className="py-14">
+      <section className="py-16">
         <div className="container-page max-w-3xl">
           <SectionHeading
+            as="h1"
             eyebrow={content.eyebrow}
             title={`${content.title} is being prepared`}
             intro="This information is not published yet. Contact BTI admissions if you need help with an enquiry."
@@ -25,17 +26,18 @@ export function LegalNoticePage({
   }
 
   return (
-    <section className="py-14">
+    <section className="py-16">
       <div className="container-page max-w-3xl">
         <SectionHeading
+          as="h1"
           eyebrow={content.eyebrow}
           title={content.title}
           intro={content.description}
         />
-        <div className="surface mt-8 grid gap-6 rounded-lg p-6 leading-7 text-[var(--brand-muted)]">
+        <div className="split-panel mt-8 grid gap-6 rounded-lg p-6 leading-7 text-[var(--brand-muted)] md:p-7">
           {content.sections.map((section) => (
             <section key={section.heading}>
-              <h2 className="text-xl font-extrabold text-[var(--brand-navy)]">
+              <h2 className="card-title">
                 {section.heading}
               </h2>
               <p className="mt-2">{section.body}</p>

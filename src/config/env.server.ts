@@ -1,4 +1,8 @@
 import { z } from "zod";
+import {
+  getDeploymentEnvironment,
+  parseDeploymentEnvironment
+} from "@/config/deployment";
 
 const optionalString = z
   .string()
@@ -14,6 +18,7 @@ const optionalUrl = optionalString.refine(
 const environmentSchema = z.object({
   NODE_ENV: z.string().optional(),
   NEXT_PHASE: z.string().optional(),
+  DEPLOYMENT_ENV: z.string().optional(),
   DATABASE_URL: optionalString,
   NEXT_PUBLIC_SITE_URL: optionalUrl,
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: optionalString,
@@ -85,8 +90,35 @@ export function validateServerEnv(
   const env = parsed.data;
   const errors: string[] = [];
 
-  if (!isProductionRuntime(env)) {
-    return { ok: true, env };
+  if (env.DEPLOYMENT_ENV && !parseDeploymentEnvironment(env.DEPLOYMENT_ENV)) {
+    errors.push(
+      "DEPLOYMENT_ENV must be one of development, preview, staging, production."
+    );
+    return { ok: false, errors };
+  }
+
+  const deploymentEnvironment = getDeploymentEnvironment(env);
+
+  // Staging mirrors production infrastructure: its canonical URL must be a
+  // real HTTPS staging hostname, never a placeholder domain.
+  if (deploymentEnvironment === "staging") {
+    if (!env.NEXT_PUBLIC_SITE_URL) {
+      errors.push("NEXT_PUBLIC_SITE_URL is required in staging.");
+    } else {
+      if (!isHttpsUrl(env.NEXT_PUBLIC_SITE_URL)) {
+        errors.push("NEXT_PUBLIC_SITE_URL must use HTTPS in staging.");
+      }
+      if (usesExampleDomain(env.NEXT_PUBLIC_SITE_URL)) {
+        errors.push("NEXT_PUBLIC_SITE_URL must not use example.com.");
+      }
+    }
+  }
+
+  const productionRules =
+    deploymentEnvironment === "production" || isProductionRuntime(env);
+
+  if (!productionRules) {
+    return errors.length ? { ok: false, errors } : { ok: true, env };
   }
 
   const requiredKeys: (keyof ServerEnv)[] = [

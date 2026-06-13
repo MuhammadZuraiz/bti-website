@@ -1,0 +1,106 @@
+# Quality gates for every pull request and push to main.
+# Both jobs run against a disposable PostgreSQL service container with
+# test-only credentials — no production secrets exist in CI.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+env:
+  DATABASE_URL: postgresql://bti:bti_test_password@localhost:5432/bti_website_test?schema=public
+
+jobs:
+  quality:
+    name: Lint, types, tests, build
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: bti
+          POSTGRES_PASSWORD: bti_test_password
+          POSTGRES_DB: bti_website_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bti -d bti_website_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      # pnpm version comes from the "packageManager" field in package.json.
+      - uses: pnpm/action-setup@v4
+
+      # Node version comes from .nvmrc so local and CI always match.
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Dependency audit (fails on high or critical advisories)
+        run: pnpm audit --audit-level high
+
+      - run: pnpm db:generate
+
+      - name: Apply migrations to a fresh database
+        run: pnpm db:deploy
+
+      - name: Verify database round-trip
+        run: pnpm db:verify
+
+      - run: pnpm lint
+      - run: pnpm lint:ts
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+  e2e:
+    name: Browser E2E and accessibility
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: bti
+          POSTGRES_PASSWORD: bti_test_password
+          POSTGRES_DB: bti_website_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bti -d bti_website_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:generate
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
+      # Playwright's global setup creates the dedicated bti_website_e2e
+      # database on the service container and applies migrations to it.
+      - run: pnpm test:e2e
+
+      - name: Upload Playwright output on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-output
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7

@@ -208,7 +208,7 @@ export function LeadForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={`surface grid gap-4 rounded-lg p-5 ${compact ? "" : "md:p-7"}`}
+      className={`form-panel grid gap-4 rounded-lg p-5 ${compact ? "" : "md:p-7"}`}
       noValidate
     >
       {turnstileSiteKey ? (
@@ -220,10 +220,10 @@ export function LeadForm({
 
       {title ? (
         <div>
-          <h2 className="text-xl font-extrabold text-[var(--brand-navy)]">
+          <h2 className="card-title text-xl">
             {title}
           </h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">
+          <p className="helper-text mt-2">
             BTI will use these details to respond to your enquiry and guide you
             toward the most relevant next step.
           </p>
@@ -421,7 +421,7 @@ export function LeadForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[var(--brand-red)] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-[var(--brand-red-dark)] disabled:cursor-not-allowed disabled:opacity-70"
+        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[var(--brand-red)] px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(181,31,54,0.18)] transition hover:bg-[var(--brand-red-dark)] disabled:cursor-not-allowed disabled:opacity-70"
       >
         <Send size={18} aria-hidden="true" />
         {isSubmitting ? "Sending..." : submitLabel}

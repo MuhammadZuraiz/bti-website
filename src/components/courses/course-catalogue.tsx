@@ -41,7 +41,7 @@ export function CourseCatalogue({ courses, locale, initialFilters }: Props) {
 
   return (
     <div className="grid gap-8">
-      <div className="surface grid gap-4 rounded-lg p-4 lg:grid-cols-[1.2fr_1fr_1fr_1fr]">
+      <div className="split-panel grid gap-4 rounded-lg p-4 lg:grid-cols-[1.2fr_1fr_1fr_1fr]">
         <label className="field-label">
           Search courses
           <span className="relative">
@@ -112,16 +112,16 @@ export function CourseCatalogue({ courses, locale, initialFilters }: Props) {
           ))}
         </div>
       ) : (
-        <div className="surface rounded-lg p-8 text-center">
-          <h2 className="text-2xl font-extrabold text-[var(--brand-navy)]">
+        <div className="muted-panel rounded-lg p-8 text-center">
+          <h2 className="section-title">
             We could not find an exact match.
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-[var(--brand-muted)]">
+          <p className="supporting-copy mx-auto mt-3 max-w-xl">
             Speak with admissions and tell us what you want to learn.
           </p>
           <a
             href={`/${locale}/contact`}
-            className="mt-5 inline-flex min-h-11 items-center justify-center rounded-lg bg-[var(--brand-red)] px-4 py-2 text-sm font-extrabold text-white"
+            className="mt-5 inline-flex min-h-11 items-center justify-center rounded-lg bg-[var(--brand-red)] px-4 py-2 text-sm font-semibold text-white"
           >
             Ask About a Course
           </a>

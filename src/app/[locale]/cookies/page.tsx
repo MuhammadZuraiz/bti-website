@@ -28,5 +28,9 @@ export default async function CookiesPage({ params }: { params: Params }) {
     notFound();
   }
 
+  if (!isLegalPagePublished("cookies")) {
+    notFound();
+  }
+
   return <LegalNoticePage pageKey="cookies" content={legalPageContent.cookies} />;
 }

@@ -28,5 +28,9 @@ export default async function TermsPage({ params }: { params: Params }) {
     notFound();
   }
 
+  if (!isLegalPagePublished("terms")) {
+    notFound();
+  }
+
   return <LegalNoticePage pageKey="terms" content={legalPageContent.terms} />;
 }

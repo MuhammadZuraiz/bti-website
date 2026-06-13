@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@11.5.3",
+  "engines": {
+    "node": ">=22 <23"
+  },
   "scripts": {
     "dev": "next dev",
     "start": "next start",
     "lint": "eslint .",
-    "lint:ts": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" \"scripts/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
+    "lint:ts": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" \"e2e/**/*.{ts,tsx}\" \"scripts/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
     "typecheck": "tsc -p tsconfig.typecheck.json --noEmit",
     "test": "vitest run",
     "build": "next build",
@@ -17,6 +20,9 @@
     "db:studio": "prisma studio",
     "db:verify": "node scripts/verify-database.mjs",
     "test:webhook-server": "node scripts/test-webhook-server.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "check:seo-headers": "node scripts/check-seo-headers.mjs",
     "leads:export": "node scripts/export-leads.mjs"
   },
   "dependencies": {
@@ -31,6 +37,8 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.11.3",
+    "@playwright/test": "1.60.0",
     "@tailwindcss/postcss": "4.3.0",
     "@types/node": "25.9.3",
     "@types/pg": "8.20.0",

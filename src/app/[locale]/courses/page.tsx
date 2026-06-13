@@ -47,11 +47,20 @@ export default async function CoursesPage({
   return (
     <section className="py-14">
       <div className="container-page grid gap-8">
-        <SectionHeading
-          eyebrow="Course catalogue"
-          title="Compare training options in Sharjah."
-          intro="Search by category, learner type, delivery mode, or topic. Speak with admissions for current schedules, availability and fee details."
-        />
+        <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+          <SectionHeading
+            as="h1"
+            eyebrow="Course catalogue"
+            title="Compare training options in Sharjah."
+            intro="Search by category, learner type, delivery mode, or topic. Speak with admissions for current schedules, availability and fee details."
+          />
+          <div className="muted-panel rounded-lg p-5">
+            <p className="helper-text">
+              Course details, schedules, fees, and available formats should be
+              confirmed with admissions before enrolment.
+            </p>
+          </div>
+        </div>
         <CourseCatalogue
           courses={courses}
           locale={locale}

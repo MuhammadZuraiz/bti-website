@@ -3,28 +3,33 @@ type SectionHeadingProps = {
   title: string;
   intro?: string;
   align?: "left" | "center";
+  /** Use "h1" when this heading is the page title. */
+  as?: "h1" | "h2";
 };
 
 export function SectionHeading({
   eyebrow,
   title,
   intro,
-  align = "left"
+  align = "left",
+  as: Heading = "h2"
 }: SectionHeadingProps) {
   return (
     <div
       className={`max-w-3xl ${align === "center" ? "mx-auto text-center" : ""}`}
     >
       {eyebrow ? (
-        <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.14em] text-[var(--brand-red)]">
+        <p className="eyebrow mb-3">
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="text-balance text-3xl font-extrabold leading-tight text-[var(--brand-navy)] md:text-4xl">
+      <Heading
+        className={`text-balance ${Heading === "h1" ? "page-title" : "section-title"}`}
+      >
         {title}
-      </h2>
+      </Heading>
       {intro ? (
-        <p className="mt-4 text-base leading-7 text-[var(--brand-muted)] md:text-lg">
+        <p className="body-large mt-4">
           {intro}
         </p>
       ) : null}

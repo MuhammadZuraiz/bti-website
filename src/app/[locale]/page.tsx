@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { HomePage } from "@/components/pages/home-page";
+import { JsonLd } from "@/components/seo/json-ld";
 import { getDictionary } from "@/content/i18n";
 import { isLocale, type Locale } from "@/lib/locale";
 import { localizedMetadata } from "@/lib/metadata";
+import { organizationSchema, websiteSchema } from "@/lib/schema";
 import { isLocaleEnabled } from "@/lib/site-utils";
 import { notFound } from "next/navigation";
 
@@ -31,5 +33,11 @@ export default async function LocaleHomePage({ params }: { params: Params }) {
     notFound();
   }
   const locale: Locale = rawLocale;
-  return <HomePage locale={locale} dictionary={getDictionary(locale)} />;
+  return (
+    <>
+      <JsonLd data={organizationSchema()} />
+      <JsonLd data={websiteSchema(locale)} />
+      <HomePage locale={locale} dictionary={getDictionary(locale)} />
+    </>
+  );
 }

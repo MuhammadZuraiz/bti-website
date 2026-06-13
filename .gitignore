@@ -1,12 +1,36 @@
-.next
-node_modules
-.pnpm-store
-coverage
-dist
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs and local caches
+*.log
+.cache/
+tmp/
+
+# Dependency folders and vendored tooling
+node_modules/
+dist/
+build/
+.pnpm-store/
+.tools/
+
+# Local secrets
 .env
-.env*.local
-.tools
+.env.*
+# ...but keep the committed example file
+!.env.example
+
+# Build output and TypeScript incremental cache
+.next/
 *.tsbuildinfo
-dev-server*.log
-next-dev*.log
+
+# Test, QA and coverage output
+coverage/
+test-results/
+playwright-report/
+artifacts/
+
+# Lead exports may contain personal data — never commit
 exports/
