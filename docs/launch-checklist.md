@@ -1,5 +1,18 @@
 # Production Launch Checklist
 
+The single source of truth for launching the BTI website. See also
+`docs/bti-intake.md` (inputs to collect) and `docs/staging-deployment.md`.
+
+## Discovery & ownership
+
+- [ ] Obtain latest SEDD trade-licence copy
+- [ ] Obtain VAT certificate or written VAT-status confirmation
+- [ ] Obtain corporate-tax registration evidence (if applicable)
+- [ ] Confirm authorised signatory / production approver
+- [ ] Confirm owners for registrar, DNS, hosting and email
+- [ ] Confirm owners for social accounts
+- [ ] Confirm admissions, finance and content owners
+
 ## Business approvals
 
 - [ ] Canonical domain decision
@@ -31,15 +44,19 @@
 - [ ] DNS access confirmed
 - [ ] Cloudflare (or equivalent) configured
 - [ ] SSL active on canonical domain
+- [ ] Email authentication configured (SPF, DKIM, DMARC)
 - [ ] Hosted PostgreSQL provisioned, `DATABASE_URL` set
 - [ ] Backups enabled (daily) + restore test performed
 - [ ] Upstash Redis REST configured
 - [ ] Turnstile site + secret keys (production widget)
 - [ ] Odoo or generic webhook endpoint + secret
 - [ ] Retry cron scheduled (5–15 min) with `LEAD_RETRY_CRON_SECRET`
+      (on Vercel set `CRON_SECRET` to the same value)
+- [ ] Staff lead-admin password set (`LEAD_ADMIN_PASSWORD`, ≥12 chars)
 - [ ] Monitoring/log forwarding + alerts (docs/operations-runbook.md)
 - [ ] MFA on all provider accounts
 - [ ] Secrets in host secret store only
+- [ ] `pnpm check:readiness` passes with the production env loaded
 - [ ] `DEPLOYMENT_ENV=production` set on the production build environment
 - [ ] Preview environment sets `DEPLOYMENT_ENV=preview` (noindex verified)
 - [ ] Staging sets `DEPLOYMENT_ENV=staging` (noindex verified)
@@ -77,6 +94,18 @@
 - [ ] Security headers verified (`pnpm check:seo-headers`)
 - [ ] Lighthouse pass recorded (docs/performance-checklist.md)
 - [ ] Database restore test performed
+- [ ] Staff lead-admin reachable with credentials, blocked without
+- [ ] Arabic RTL layout review (only if launching Arabic)
+
+## Odoo / CRM (when integrated)
+
+- [ ] Odoo.sh project with dev/staging/production branches
+- [ ] Company details configured after licence verification
+- [ ] User groups and named users created
+- [ ] Lead fields + CRM stages configured
+- [ ] Course products created; tax rules after finance review
+- [ ] Test lead → quote → invoice → payment → enrolment/cohort
+- [ ] Confirm a website enquiry appears in CRM and staff are notified
 
 ## Launch day
 

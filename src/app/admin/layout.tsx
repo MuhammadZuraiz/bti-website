@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false }
 };
 
-// Auth is enforced by src/middleware.ts (HTTP Basic). This layout is a plain,
+// Auth is enforced by src/proxy.ts (HTTP Basic). This layout is a plain,
 // dependency-light shell for the staff lead views — intentionally separate from
 // the public [locale] layout (no marketing header/footer).
 export default function AdminLayout({

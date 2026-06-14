@@ -1,9 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { adminCredentialsFromEnv, isAuthorizedAdmin } from "@/lib/server/admin-auth";
 
-// Gate the staff lead-admin area behind HTTP Basic auth. This runs on the Edge
-// runtime, so it only uses Edge-safe helpers (no node:crypto, no Prisma).
-export function middleware(request: NextRequest) {
+// Gate the staff lead-admin area behind HTTP Basic auth. Runs at the Edge
+// runtime (Next.js "proxy" convention, formerly "middleware"), so it only uses
+// Edge-safe helpers (no node:crypto, no Prisma).
+export function proxy(request: NextRequest) {
   const authorized = isAuthorizedAdmin(
     request.headers.get("authorization"),
     adminCredentialsFromEnv()

@@ -1,4 +1,4 @@
-// Edge-safe admin auth helpers (no node:crypto, so they work in middleware).
+// Edge-safe admin auth helpers (no node:crypto, so they work in the Edge proxy).
 // Used to gate /admin and /api/admin behind HTTP Basic auth.
 
 /** Constant-time string comparison to avoid leaking length/content via timing. */

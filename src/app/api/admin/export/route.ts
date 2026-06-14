@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { leadsToCsv } from "@/lib/server/lead-csv";
 import { prismaLeadRepository } from "@/services/lead-repository";
 
-// Auth is enforced by middleware (HTTP Basic on /api/admin/*). This handler
+// Auth is enforced by the proxy (HTTP Basic on /api/admin/*). This handler
 // streams all leads as CSV for authenticated staff. Node runtime for Prisma.
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
