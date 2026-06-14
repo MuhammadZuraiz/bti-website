@@ -27,6 +27,8 @@ const environmentSchema = z.object({
   UPSTASH_REDIS_REST_TOKEN: optionalString,
   LEAD_RETRY_CRON_SECRET: optionalString,
   LEAD_HASH_SALT: optionalString,
+  LEAD_ADMIN_USER: optionalString,
+  LEAD_ADMIN_PASSWORD: optionalString,
   ODOO_LEAD_WEBHOOK_URL: optionalUrl,
   ODOO_LEAD_WEBHOOK_SECRET: optionalString,
   GENERIC_LEAD_WEBHOOK_URL: optionalUrl,
@@ -128,7 +130,8 @@ export function validateServerEnv(
     "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
     "UPSTASH_REDIS_REST_URL",
     "UPSTASH_REDIS_REST_TOKEN",
-    "LEAD_RETRY_CRON_SECRET"
+    "LEAD_RETRY_CRON_SECRET",
+    "LEAD_ADMIN_PASSWORD"
   ];
 
   requiredKeys.forEach((key) => {
@@ -161,6 +164,10 @@ export function validateServerEnv(
 
   if (env.LEAD_RETRY_CRON_SECRET && env.LEAD_RETRY_CRON_SECRET.length < 16) {
     errors.push("LEAD_RETRY_CRON_SECRET must be at least 16 characters.");
+  }
+
+  if (env.LEAD_ADMIN_PASSWORD && env.LEAD_ADMIN_PASSWORD.length < 12) {
+    errors.push("LEAD_ADMIN_PASSWORD must be at least 12 characters.");
   }
 
   devBypassFlags.forEach((flag) => {

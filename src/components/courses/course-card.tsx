@@ -1,8 +1,10 @@
 "use client";
 
 import { ArrowUpRight, MessageCircle } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { ContextLink } from "@/components/conversion/context-link";
+import { resolveCourseImage } from "@/config/media";
 import type { Course } from "@/types/course";
 import { trackEvent } from "@/lib/analytics";
 import { localizePath, type Locale } from "@/lib/locale";
@@ -13,8 +15,18 @@ type CourseCardProps = {
 };
 
 export function CourseCard({ course, locale }: CourseCardProps) {
+  const courseImage = resolveCourseImage(course);
   return (
     <article className="compact-card flex h-full flex-col rounded-lg p-5 transition hover:-translate-y-0.5 hover:border-[rgba(181,31,54,0.34)]">
+      {courseImage ? (
+        <Image
+          src={courseImage.src}
+          alt={courseImage.alt}
+          width={480}
+          height={300}
+          className="mb-4 h-36 w-full rounded-lg object-cover"
+        />
+      ) : null}
       <p className="meta-label text-[var(--brand-red)]">
         {course.category}
       </p>

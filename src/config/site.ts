@@ -48,7 +48,10 @@ export const siteConfig = {
     showTestimonials: false,
     showAccreditationLogos: false,
     showPartnerLogos: false,
-    requireLeadCaptureForDownloads: false
+    requireLeadCaptureForDownloads: false,
+    // When analytics is configured, also require cookie consent before loading
+    // it (shows a consent banner). Decide with BTI — see docs/analytics-events.md.
+    requireCookieConsent: false
   }
 } as const;
 

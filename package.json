@@ -13,7 +13,7 @@
     "lint:ts": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" \"e2e/**/*.{ts,tsx}\" \"scripts/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
     "typecheck": "tsc -p tsconfig.typecheck.json --noEmit",
     "test": "vitest run",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
@@ -23,6 +23,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "check:seo-headers": "node scripts/check-seo-headers.mjs",
+    "check:readiness": "node scripts/check-readiness.mjs",
     "leads:export": "node scripts/export-leads.mjs"
   },
   "dependencies": {

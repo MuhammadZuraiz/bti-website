@@ -22,4 +22,12 @@ export type Course = {
    * sitemap. Omitted dates simply leave lastModified out of the sitemap.
    */
   lastReviewedAt?: string;
+  /**
+   * Optional course image. Set only when an approved, licensed photo has been
+   * added under public/. When unset (the default) the page renders without an
+   * image — no placeholder is shown. See src/config/media.ts and
+   * docs/bti-intake.md.
+   */
+  imageSrc?: string;
+  imageAlt?: string;
 };

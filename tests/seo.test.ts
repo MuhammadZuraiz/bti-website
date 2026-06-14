@@ -16,7 +16,7 @@ describe("robots", () => {
     expect(robots.rules).toMatchObject({
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/"]
+      disallow: ["/api/", "/admin/"]
     });
     expect(robots.sitemap).toBe(`${siteConfig.siteUrl}/sitemap.xml`);
   });

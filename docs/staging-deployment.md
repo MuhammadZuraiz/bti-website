@@ -81,11 +81,57 @@ Key differences from staging: `DEPLOYMENT_ENV=production`, the canonical
 `NEXT_PUBLIC_SITE_URL`, real Turnstile keys, the real webhook endpoint,
 production database with backups, and the retry cron.
 
-## Platform notes
+## Recommended stack (Vercel + Neon + Upstash + Turnstile)
 
-Any Node-capable Next.js host works (Vercel, Netlify, Railway, Render,
-Fly.io, a VPS with a process manager). On Vercel specifically: map
-`DEPLOYMENT_ENV` per environment (production → `production`, preview →
-`preview`), and remember preview deployments are noindexed automatically by
-the fail-safe default even if the variable is missing. The project is not
-locked to any provider.
+This is the lowest-ops fit for the architecture; the project is not locked to
+it (portable fallback below).
+
+| Concern | Service | Notes |
+| --- | --- | --- |
+| App hosting | Vercel | Native Next.js App Router; per-environment env vars. |
+| PostgreSQL | Neon | Use the **pooled** connection string for `DATABASE_URL` (serverless opens many short-lived connections). Supabase/RDS are drop-in. |
+| Rate limiting | Upstash Redis REST | The code already speaks Upstash REST. |
+| Bot protection | Cloudflare Turnstile | Test keys on staging, real keys in production. |
+| Retry cron | Vercel Cron | Defined in `vercel.json` (every 10 min → `/api/internal/retry-leads`). |
+| Monitoring | Vercel logs + Sentry | The structured logger is provider-agnostic. |
+
+### Vercel setup
+
+1. Import the GitHub repo into Vercel. Build command is the default
+   (`pnpm build`, which runs `prisma generate && next build`).
+2. Set environment variables per environment (Production / Preview). Use
+   `.env.production.example` as the checklist. Critically:
+   - **Production env**: `DEPLOYMENT_ENV=production` + the canonical
+     `NEXT_PUBLIC_SITE_URL`.
+   - **Preview env**: `DEPLOYMENT_ENV=preview` (preview deploys are noindexed
+     by the fail-safe default even if unset).
+3. **Cron auth**: Vercel Cron calls the cron path with
+   `Authorization: Bearer $CRON_SECRET`. Set a Vercel env var
+   `CRON_SECRET` equal to `LEAD_RETRY_CRON_SECRET` so the retry endpoint
+   accepts the scheduled call. The cron schedule itself lives in `vercel.json`.
+4. Point DNS at Vercel and attach the canonical domain (production only).
+
+### Portable single-platform fallback (Railway / Render / Fly / VPS)
+
+If BTI prefers one platform for app + database: run the app as a Node server
+(`pnpm build` then `pnpm start`), use the platform's managed PostgreSQL for
+`DATABASE_URL`, and replace Vercel Cron with the platform scheduler (or any
+external cron) issuing:
+
+```
+POST https://<domain>/api/internal/retry-leads
+x-bti-cron-secret: <LEAD_RETRY_CRON_SECRET>
+```
+
+Everything else (env vars, migrations, verification) is identical.
+
+## Deploy-readiness gate
+
+Before any deploy, with the target env loaded:
+
+```bash
+pnpm check:readiness
+```
+
+It exits non-zero if a production-required variable is missing and lists the
+remaining business/content TODOs.

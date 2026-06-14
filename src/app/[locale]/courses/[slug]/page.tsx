@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CheckCircle2, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { LeadForm } from "@/components/forms/lead-form";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button-link";
 import { courses, getCourseBySlug } from "@/content/courses";
 import { siteConfig } from "@/config/site";
+import { resolveCourseImage } from "@/config/media";
 import { isLocale, localizePath, type Locale } from "@/lib/locale";
 import { breadcrumbSchema, courseSchema, faqSchema } from "@/lib/schema";
 import { localizedMetadata } from "@/lib/metadata";
@@ -63,6 +65,7 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
     .map(getCourseBySlug)
     .filter((related): related is Course => Boolean(related));
   const courseUrl = `${siteConfig.siteUrl}/${locale}/courses/${course.slug}`;
+  const courseImage = resolveCourseImage(course);
 
   return (
     <>
@@ -107,6 +110,15 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
               </div>
             </div>
             <aside className="featured-card rounded-lg p-5">
+              {courseImage ? (
+                <Image
+                  src={courseImage.src}
+                  alt={courseImage.alt}
+                  width={720}
+                  height={480}
+                  className="mb-5 h-44 w-full rounded-lg object-cover"
+                />
+              ) : null}
               <h2 className="card-title text-xl">
                 Course information
               </h2>

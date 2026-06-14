@@ -114,4 +114,16 @@ test.describe("conditional rendering", () => {
       ).toHaveCount(0);
     }
   });
+
+  test("no analytics or consent banner loads by default", async ({ page }) => {
+    await page.goto("/en");
+    // No GA measurement ID configured → no third-party analytics script...
+    await expect(
+      page.locator('script[src*="googletagmanager.com"]')
+    ).toHaveCount(0);
+    // ...and no cookie-consent dialog.
+    await expect(
+      page.getByRole("dialog", { name: "Cookie consent" })
+    ).toHaveCount(0);
+  });
 });

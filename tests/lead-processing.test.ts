@@ -63,6 +63,12 @@ function fakeRepository(options: { failCreate?: boolean } = {}) {
     },
     async findForRetry(_query: RetryQuery) {
       return records;
+    },
+    async list() {
+      return { records, total: records.length };
+    },
+    async findById(id: string) {
+      return records.find((item) => item.id === id) ?? null;
     }
   };
   return { repository, records };

@@ -10,6 +10,7 @@ const productionEnv = {
   UPSTASH_REDIS_REST_URL: "https://redis.example.com",
   UPSTASH_REDIS_REST_TOKEN: "redis-token",
   LEAD_RETRY_CRON_SECRET: "a-very-long-secret",
+  LEAD_ADMIN_PASSWORD: "admin-password-1234",
   ODOO_LEAD_WEBHOOK_URL: "https://odoo.example.com/leads"
 } as NodeJS.ProcessEnv;
 
@@ -22,6 +23,22 @@ describe("server environment validation", () => {
     const result = validateServerEnv({
       ...productionEnv,
       DATABASE_URL: ""
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it("requires an admin password in production", () => {
+    const result = validateServerEnv({
+      ...productionEnv,
+      LEAD_ADMIN_PASSWORD: ""
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it("rejects a too-short admin password in production", () => {
+    const result = validateServerEnv({
+      ...productionEnv,
+      LEAD_ADMIN_PASSWORD: "short"
     });
     expect(result.ok).toBe(false);
   });

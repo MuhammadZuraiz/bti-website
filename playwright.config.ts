@@ -74,7 +74,9 @@ export default defineConfig({
       }
     },
     {
-      command: `pnpm dev --port ${e2ePort}`,
+      // Run next directly so the --port flag is forwarded reliably (pnpm can
+      // swallow flags passed to a run-script).
+      command: `pnpm exec next dev --port ${e2ePort}`,
       url: `${e2eBaseUrl}/en`,
       reuseExistingServer: !process.env.CI,
       timeout: 240_000,
@@ -89,6 +91,8 @@ export default defineConfig({
         GENERIC_LEAD_WEBHOOK_URL: `http://localhost:${webhookPort}/test-webhook`,
         GENERIC_LEAD_WEBHOOK_SECRET: "local-test-secret",
         LEAD_RETRY_CRON_SECRET: "e2e-retry-secret-0123",
+        LEAD_ADMIN_USER: "admin",
+        LEAD_ADMIN_PASSWORD: "e2e-admin-password",
         NEXT_PUBLIC_SITE_URL: e2eBaseUrl
       }
     }

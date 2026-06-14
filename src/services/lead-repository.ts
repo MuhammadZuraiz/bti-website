@@ -55,10 +55,24 @@ export type RetryQuery = {
   maxAttempts: number;
 };
 
+export type LeadListQuery = {
+  status?: DeliveryStatus;
+  leadType?: string;
+  limit: number;
+  offset: number;
+};
+
+export type LeadListResult = {
+  records: LeadDeliveryRecord[];
+  total: number;
+};
+
 export interface LeadRepository {
   create(data: LeadRecordInput): Promise<LeadDeliveryRecord>;
   updateDelivery(id: string, update: DeliveryUpdate): Promise<LeadDeliveryRecord>;
   findForRetry(query: RetryQuery): Promise<LeadDeliveryRecord[]>;
+  list(query: LeadListQuery): Promise<LeadListResult>;
+  findById(id: string): Promise<LeadDeliveryRecord | null>;
 }
 
 function toDeliveryStatus(value: string): DeliveryStatus {
@@ -113,5 +127,29 @@ export const prismaLeadRepository: LeadRepository = {
     });
 
     return records.map(toLeadRecord);
+  },
+
+  async list({ status, leadType, limit, offset }) {
+    const where = {
+      ...(status ? { deliveryStatus: status } : {}),
+      ...(leadType ? { leadType } : {})
+    };
+
+    const [records, total] = await Promise.all([
+      prisma.leadSubmission.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        take: limit,
+        skip: offset
+      }),
+      prisma.leadSubmission.count({ where })
+    ]);
+
+    return { records: records.map(toLeadRecord), total };
+  },
+
+  async findById(id) {
+    const record = await prisma.leadSubmission.findUnique({ where: { id } });
+    return record ? toLeadRecord(record) : null;
   }
 };

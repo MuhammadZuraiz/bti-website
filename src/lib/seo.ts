@@ -46,7 +46,7 @@ export function buildRobots(
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/"]
+      disallow: ["/api/", "/admin/"]
     },
     sitemap: `${siteConfig.siteUrl}/sitemap.xml`
   };

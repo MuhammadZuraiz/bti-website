@@ -1,32 +1,29 @@
-import Script from "next/script";
+import { siteConfig } from "@/config/site";
+import { AnalyticsLoader } from "@/components/consent/analytics-loader";
+import { ConsentBanner } from "@/components/consent/consent-banner";
 
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 /**
- * Loads Google Analytics only when a measurement ID is configured.
- * With no ID (the default), this renders nothing and no third-party
- * request is ever made. Keep the ID unset until BTI approves the
- * analytics and cookie-consent approach — see docs/analytics-events.md.
+ * Analytics + consent entry point.
+ * - No measurement ID (the default) → renders nothing; no third-party request.
+ * - ID set, requireCookieConsent false → analytics loads (anonymised IP), no banner.
+ * - ID set, requireCookieConsent true → banner shown; analytics loads only after consent.
+ *
+ * Keep NEXT_PUBLIC_GA_MEASUREMENT_ID unset until BTI approves analytics and the
+ * cookie-consent approach — see docs/analytics-events.md.
  */
 export function AnalyticsScripts() {
   if (!measurementId) {
     return null;
   }
 
+  const requireConsent = siteConfig.featureFlags.requireCookieConsent;
+
   return (
     <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
-        strategy="afterInteractive"
-      />
-      <Script id="ga-init" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${measurementId}', { anonymize_ip: true });
-        `}
-      </Script>
+      <AnalyticsLoader measurementId={measurementId} requireConsent={requireConsent} />
+      {requireConsent ? <ConsentBanner /> : null}
     </>
   );
 }

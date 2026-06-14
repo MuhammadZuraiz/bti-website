@@ -42,6 +42,12 @@ function repo(records: LeadDeliveryRecord[]) {
     async findForRetry(query) {
       lastQuery = query;
       return records.slice(0, query.limit);
+    },
+    async list() {
+      throw new Error("not used");
+    },
+    async findById() {
+      throw new Error("not used");
     }
   };
   return { repository, getLastQuery: () => lastQuery };
