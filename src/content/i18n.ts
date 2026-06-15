@@ -47,9 +47,16 @@ export const dictionaries = {
         "Explore professional and skills-based training options for organisations, teams, and institutions. Tell BTI what your team needs and request a tailored conversation.",
       resourcesTitle: "Start with a helpful guide.",
       faqTitle: "Questions learners often ask.",
-      finalTitle: "Ready to take the next step?",
+      finalTitle: "Need help choosing the right course?",
       finalCopy:
-        "Tell us what you want to learn. BTI's admissions team can help you explore the right course options and answer your questions."
+        "BTI's admissions team can guide you through course options, entry requirements, schedules, and the best path for your goals.",
+      finalPoints: [
+        "Free course guidance",
+        "Quick response on WhatsApp",
+        "Help with admissions and course options"
+      ],
+      finalActionLabel: "Ready to talk?",
+      finalNote: "Free course guidance before you apply."
     }
   },
   ar: {
@@ -97,9 +104,16 @@ export const dictionaries = {
         "استكشف خيارات تدريب مهني ومهاري للمؤسسات والفرق. أخبر BTI بما يحتاجه فريقك واطلب محادثة مخصصة.",
       resourcesTitle: "ابدأ بدليل مفيد.",
       faqTitle: "أسئلة شائعة من المتعلمين.",
-      finalTitle: "هل أنت جاهز للخطوة التالية؟",
+      finalTitle: "هل تحتاج مساعدة في اختيار الدورة المناسبة؟",
       finalCopy:
-        "أخبرنا بما تريد تعلمه. يمكن لفريق القبول في BTI مساعدتك في استكشاف خيارات الدورات والإجابة عن أسئلتك."
+        "يمكن لفريق القبول في BTI إرشادك حول خيارات الدورات ومتطلبات الالتحاق والجداول وأفضل مسار يناسب أهدافك.",
+      finalPoints: [
+        "إرشاد مجاني حول الدورات",
+        "رد سريع عبر واتساب",
+        "مساعدة في القبول وخيارات الدورات"
+      ],
+      finalActionLabel: "هل أنت مستعد للحديث؟",
+      finalNote: "إرشاد مجاني حول الدورات قبل التقديم."
     }
   }
 } as const;

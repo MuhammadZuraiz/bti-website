@@ -103,7 +103,7 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
       <JsonLd data={websiteSchema(locale)} />
       <JsonLd data={faqSchema(homeFaq)} />
 
-      <section className="bg-[var(--brand-soft)]">
+      <section className="hero-surface">
         <div className="container-page grid min-h-[calc(100vh-80px)] items-center gap-8 py-10 lg:grid-cols-[1.05fr_0.95fr] lg:py-14">
           <div>
             <Badge>{dictionary.home.eyebrow}</Badge>
@@ -287,7 +287,7 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
         </div>
       </section>
 
-      <section className="bg-[var(--brand-navy)] py-16 text-white">
+      <section className="section-navy py-16 text-white">
         <div className="container-page grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
             <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.14em] text-white/60">
@@ -406,26 +406,60 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
       </section>
 
       <section className="bg-[var(--brand-soft)] py-16">
-        <div className="container-page split-panel grid gap-6 rounded-lg p-7 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div>
-            <h2 className="section-title">
-              {dictionary.home.finalTitle}
-            </h2>
-            <p className="supporting-copy mt-3 max-w-2xl">
-              {dictionary.home.finalCopy}
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href={localizePath(locale, "/contact")}>
-              Speak to Admissions
-            </ButtonLink>
-            <ButtonLink href={`https://wa.me/${siteConfig.whatsappNumber}`} variant="secondary">
-              <MessageCircle size={18} />
-              WhatsApp BTI
-            </ButtonLink>
-            <ButtonLink href={localizePath(locale, "/courses")} variant="ghost">
-              Browse Courses
-            </ButtonLink>
+        <div className="container-page">
+          <div className="relative overflow-hidden rounded-2xl border border-[var(--brand-border)] border-l-4 border-l-[var(--brand-red)] bg-white p-7 shadow-[var(--shadow-sm)] md:p-9">
+            {/* Soft burgundy glow behind the action panel */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-24 top-1/2 hidden h-72 w-72 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(181,31,54,0.12),transparent_70%)] lg:block"
+            />
+            <div className="relative grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+              <div>
+                <h2 className="section-title">
+                  {dictionary.home.finalTitle}
+                </h2>
+                <p className="supporting-copy mt-3 max-w-xl">
+                  {dictionary.home.finalCopy}
+                </p>
+                <ul className="mt-6 grid gap-2.5">
+                  {dictionary.home.finalPoints.map((point) => (
+                    <li key={point} className="flex items-center gap-2.5 text-sm font-semibold text-[var(--brand-ink)]">
+                      <CheckCircle2 size={18} className="shrink-0 text-[var(--brand-green)]" aria-hidden="true" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-xl border border-[var(--brand-border)] bg-[var(--brand-soft)] p-5 md:p-6">
+                <p className="meta-label text-[var(--brand-red)]">
+                  {dictionary.home.finalActionLabel}
+                </p>
+                <div className="mt-4 grid gap-2.5">
+                  <ButtonLink href={localizePath(locale, "/contact")} className="w-full">
+                    Speak to Admissions
+                  </ButtonLink>
+                  <ButtonLink
+                    href={`https://wa.me/${siteConfig.whatsappNumber}`}
+                    variant="secondary"
+                    className="w-full"
+                  >
+                    <MessageCircle size={18} aria-hidden="true" />
+                    WhatsApp BTI
+                  </ButtonLink>
+                  <ButtonLink
+                    href={localizePath(locale, "/courses")}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    Browse Courses
+                  </ButtonLink>
+                </div>
+                <p className="mt-4 text-xs font-semibold text-[var(--brand-muted)]">
+                  {dictionary.home.finalNote}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

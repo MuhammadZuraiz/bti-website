@@ -31,6 +31,9 @@ coverage/
 test-results/
 playwright-report/
 artifacts/
+.playwright-mcp/
+# Ad-hoc screenshots dropped at the repo root
+/*.png
 
 # Lead exports may contain personal data — never commit
 exports/
