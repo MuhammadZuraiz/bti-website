@@ -43,9 +43,9 @@ export function getContactContext(
 
   return {
     kind: "general" as const,
-    title: "Send a general enquiry",
-    formTitle: "Send a general enquiry",
-    submitLabel: "Send Enquiry",
+    title: "Send an admission enquiry",
+    formTitle: "Send an admission enquiry",
+    submitLabel: "Send Admission Enquiry",
     courseInterest: "",
     courseSlug: "",
     resourceInterest: "",

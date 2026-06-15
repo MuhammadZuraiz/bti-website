@@ -48,7 +48,7 @@ export default async function ContactPage({
             as="h1"
             eyebrow="Contact BTI"
             title="Speak with BTI in Sharjah."
-            intro="Ask about course options, placement-test guidance, corporate training, schedules, and current availability."
+            intro="Ask about course options, placement-test guidance, corporate training, schedules, and current availability. Not sure where to start? The admissions team can help you choose a suitable next step."
           />
         </div>
       </section>

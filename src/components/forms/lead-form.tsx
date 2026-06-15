@@ -7,6 +7,7 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { siteConfig } from "@/config/site";
+import { courses } from "@/content/courses";
 import { confirmedEventByLeadType } from "@/lib/lead-analytics";
 import { leadPayloadSchema, type LeadType } from "@/lib/lead-schema";
 import { parseLeadSubmissionResponse } from "@/lib/lead-response";
@@ -65,6 +66,12 @@ function getUtmValue(key: string) {
 }
 
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+// Guided course-interest options, derived from the real catalogue so they stay
+// in sync. "Not sure yet" maps to an empty value (many enquirers don't know).
+const courseInterestOptions = Array.from(
+  new Set(courses.map((course) => course.category))
+);
 
 export function LeadForm({
   leadType,
@@ -224,8 +231,8 @@ export function LeadForm({
             {title}
           </h2>
           <p className="helper-text mt-2">
-            BTI will use these details to respond to your enquiry and guide you
-            toward the most relevant next step.
+            Share a few details and BTI will contact you with relevant course
+            options and next steps.
           </p>
         </div>
       ) : null}
@@ -286,11 +293,19 @@ export function LeadForm({
       {showCourseInterestField && !corporate ? (
         <label className="field-label">
           Course interest
-          <input
-            className="field-control"
-            placeholder="English, IELTS, accounting, HR..."
-            {...register("courseInterest")}
-          />
+          <select className="field-control" {...register("courseInterest")}>
+            <option value="">Not sure yet — please advise</option>
+            {/* Preserve a pre-selected course (e.g. arriving from a course page)
+                even if its title isn't one of the catalogue categories. */}
+            {courseInterest && !courseInterestOptions.includes(courseInterest) ? (
+              <option value={courseInterest}>{courseInterest}</option>
+            ) : null}
+            {courseInterestOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
           {errors.courseInterest?.message ? (
             <span className="form-error" role="alert">
               {errors.courseInterest.message}
@@ -389,27 +404,30 @@ export function LeadForm({
         />
       ) : null}
 
-      <label className="flex gap-3 rounded-lg bg-[var(--brand-soft)] p-3 text-sm font-semibold leading-6 text-[var(--brand-ink)]">
+      <label className="flex gap-3 rounded-lg bg-[var(--brand-soft)] p-3 leading-6 text-[var(--brand-ink)]">
         <input
           type="checkbox"
           className="mt-1 h-4 w-4 accent-[var(--brand-red)]"
           {...register("consent")}
         />
         <span>
-          By submitting, you agree that {siteConfig.shortName} may contact you
-          about your enquiry. This is not a confirmed booking until admissions
-          responds.
-          {isLegalPagePublished("privacy") ? (
-            <>
-              {" "}
-              <Link
-                href={localizePath(locale, "/privacy")}
-                className="font-extrabold text-[var(--brand-red)] underline underline-offset-2"
-              >
-                Privacy notice
-              </Link>
-            </>
-          ) : null}
+          <span className="text-sm font-semibold">
+            I agree that {siteConfig.shortName} may contact me about this enquiry.
+          </span>
+          <span className="mt-1 block text-xs leading-5 text-[var(--brand-muted)]">
+            This is not a confirmed booking until admissions responds.
+            {isLegalPagePublished("privacy") ? (
+              <>
+                {" "}
+                <Link
+                  href={localizePath(locale, "/privacy")}
+                  className="font-bold text-[var(--brand-red)] underline underline-offset-2"
+                >
+                  Privacy notice
+                </Link>
+              </>
+            ) : null}
+          </span>
         </span>
       </label>
       {errors.consent?.message ? (

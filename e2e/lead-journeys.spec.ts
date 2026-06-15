@@ -55,7 +55,7 @@ test("general enquiry from the contact page", async ({ page }) => {
   await page.goto("/en/contact");
   await fillBaseLeadFields(page, lead);
   await page.getByRole("textbox", { name: "Message" }).fill("E2E synthetic general enquiry.");
-  const reference = await submitAndCaptureReference(page, "Send Enquiry");
+  const reference = await submitAndCaptureReference(page, "Send Admission Enquiry");
 
   const row = await fetchLeadByReference(reference);
   expect(row).toMatchObject({
@@ -138,7 +138,7 @@ test("UTM parameters are stored with the lead", async ({ page }) => {
   );
   await fillBaseLeadFields(page, lead);
   await page.getByRole("textbox", { name: "Message" }).fill("E2E synthetic UTM enquiry.");
-  const reference = await submitAndCaptureReference(page, "Send Enquiry");
+  const reference = await submitAndCaptureReference(page, "Send Admission Enquiry");
 
   const row = await fetchLeadByReference(reference);
   expect(row).toMatchObject({
@@ -167,7 +167,7 @@ test("failed submission keeps values and offers phone and WhatsApp fallback", as
   await page.goto("/en/contact");
   await fillBaseLeadFields(page, lead);
   await page.getByRole("textbox", { name: "Message" }).fill("E2E synthetic failure-state enquiry.");
-  await page.getByRole("button", { name: "Send Enquiry" }).click();
+  await page.getByRole("button", { name: "Send Admission Enquiry" }).click();
 
   await expect(
     page.getByRole("alert").filter({ hasText: /could not send/i })
@@ -211,7 +211,7 @@ test("submit button blocks duplicate submissions while loading", async ({ page }
   await fillBaseLeadFields(page, lead);
   await page.getByRole("textbox", { name: "Message" }).fill("E2E synthetic duplicate-click test.");
 
-  await page.getByRole("button", { name: "Send Enquiry" }).click();
+  await page.getByRole("button", { name: "Send Admission Enquiry" }).click();
 
   // While the request is in flight the button is disabled and reads "Sending...".
   const sending = page.getByRole("button", { name: "Sending..." });
