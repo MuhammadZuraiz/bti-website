@@ -45,9 +45,9 @@ export default async function CoursesPage({
   const locale: Locale = rawLocale;
 
   return (
-    <section className="py-14">
-      <div className="container-page grid gap-8">
-        <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+    <>
+      <section className="hero-surface py-14">
+        <div className="container-page grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <SectionHeading
             as="h1"
             eyebrow="Course catalogue"
@@ -61,17 +61,21 @@ export default async function CoursesPage({
             </p>
           </div>
         </div>
-        <CourseCatalogue
-          courses={courses}
-          locale={locale}
-          initialFilters={{
-            category: asString(resolvedSearchParams.category),
-            audience: asString(resolvedSearchParams.audience),
-            deliveryMode: asString(resolvedSearchParams.deliveryMode),
-            query: asString(resolvedSearchParams.query)
-          }}
-        />
-      </div>
-    </section>
+      </section>
+      <section className="py-14">
+        <div className="container-page">
+          <CourseCatalogue
+            courses={courses}
+            locale={locale}
+            initialFilters={{
+              category: asString(resolvedSearchParams.category),
+              audience: asString(resolvedSearchParams.audience),
+              deliveryMode: asString(resolvedSearchParams.deliveryMode),
+              query: asString(resolvedSearchParams.query)
+            }}
+          />
+        </div>
+      </section>
+    </>
   );
 }

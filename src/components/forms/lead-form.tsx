@@ -421,7 +421,7 @@ export function LeadForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[var(--brand-red)] px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(181,31,54,0.18)] transition hover:bg-[var(--brand-red-dark)] disabled:cursor-not-allowed disabled:opacity-70"
+        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[linear-gradient(180deg,#c5293f,var(--brand-red-dark))] px-5 py-3 text-sm font-semibold text-white shadow-[var(--shadow-red)] transition hover:-translate-y-px hover:shadow-[0_14px_30px_rgba(181,31,54,0.34)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
       >
         <Send size={18} aria-hidden="true" />
         {isSubmitting ? "Sending..." : submitLabel}

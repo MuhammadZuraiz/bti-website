@@ -53,7 +53,7 @@ export function Footer({ locale, dictionary }: FooterProps) {
     socialLinks.some(([, url]) => hasValidSocialUrl(url));
 
   return (
-    <footer className="border-t border-[var(--brand-border)] bg-[var(--brand-navy)] text-white">
+    <footer className="section-navy border-t border-[var(--brand-border)] text-white">
       <div className="container-page py-5 md:hidden">
         <div className="flex items-center gap-3">
           <Image
@@ -140,7 +140,7 @@ export function Footer({ locale, dictionary }: FooterProps) {
                 <li key={href}>
                   <Link
                     href={localizePath(locale, href)}
-                    className="inline-flex min-h-8 items-center hover:text-white"
+                    className="inline-flex min-h-8 items-center transition-colors hover:text-white"
                   >
                     {label}
                   </Link>
@@ -168,7 +168,7 @@ export function Footer({ locale, dictionary }: FooterProps) {
                         <li key={href}>
                           <Link
                             href={localizePath(locale, href)}
-                            className="inline-flex min-h-8 items-center hover:text-white"
+                            className="inline-flex min-h-8 items-center transition-colors hover:text-white"
                           >
                             {label}
                           </Link>
@@ -178,7 +178,7 @@ export function Footer({ locale, dictionary }: FooterProps) {
                       <li>
                         <Link
                           href={localizePath(alternateLocale)}
-                          className="inline-flex min-h-8 items-center hover:text-white"
+                          className="inline-flex min-h-8 items-center transition-colors hover:text-white"
                         >
                           {alternateLocale.toUpperCase()}
                         </Link>
@@ -194,7 +194,7 @@ export function Footer({ locale, dictionary }: FooterProps) {
                           key={label}
                           href={url}
                           aria-label={label}
-                          className="grid h-10 w-10 place-items-center rounded-lg border border-white/15 text-white/78 hover:text-white"
+                          className="grid h-10 w-10 place-items-center rounded-lg border border-white/15 text-white/78 transition-colors hover:text-white"
                         >
                           <ExternalLink size={17} aria-hidden="true" />
                         </a>
@@ -279,7 +279,7 @@ export function Footer({ locale, dictionary }: FooterProps) {
           <ul className="mt-3 grid gap-2 text-sm leading-6 text-white/78">
             {usefulLinks.map(([label, href]) => (
               <li key={href}>
-                <Link href={localizePath(locale, href)} className="hover:text-white">
+                <Link href={localizePath(locale, href)} className="transition-colors hover:text-white">
                   {label}
                 </Link>
               </li>
@@ -298,7 +298,7 @@ export function Footer({ locale, dictionary }: FooterProps) {
                   .filter(([key]) => publishedLegalPages.includes(key))
                   .map(([, label, href]) => (
                     <li key={href}>
-                      <Link href={localizePath(locale, href)} className="hover:text-white">
+                      <Link href={localizePath(locale, href)} className="transition-colors hover:text-white">
                         {label}
                       </Link>
                     </li>
@@ -307,7 +307,7 @@ export function Footer({ locale, dictionary }: FooterProps) {
                   <li>
                     <Link
                       href={localizePath(alternateLocale)}
-                      className="hover:text-white"
+                      className="transition-colors hover:text-white"
                     >
                       {alternateLocale.toUpperCase()}
                     </Link>
@@ -324,7 +324,7 @@ export function Footer({ locale, dictionary }: FooterProps) {
                     key={label}
                     href={url}
                     aria-label={label}
-                    className="grid h-9 w-9 place-items-center rounded-lg border border-white/15 text-white/78 hover:text-white"
+                    className="grid h-9 w-9 place-items-center rounded-lg border border-white/15 text-white/78 transition-colors hover:text-white"
                   >
                     <ExternalLink size={17} aria-hidden="true" />
                   </a>

@@ -2,8 +2,8 @@
 
 import { ArrowUpRight, MessageCircle } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { ContextLink } from "@/components/conversion/context-link";
+import { ButtonLink } from "@/components/ui/button-link";
 import { resolveCourseImage } from "@/config/media";
 import type { Course } from "@/types/course";
 import { trackEvent } from "@/lib/analytics";
@@ -47,14 +47,14 @@ export function CourseCard({ course, locale }: CourseCardProps) {
         ))}
       </div>
       <div className="mt-5 grid gap-2">
-        <Link
+        <ButtonLink
           href={localizePath(locale, `/courses/${course.slug}`)}
+          variant="dark"
           onClick={() => trackEvent("course_card_click", { course: course.slug })}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[var(--brand-navy)] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[var(--brand-purple)]"
         >
           Explore programme
           <ArrowUpRight size={16} aria-hidden="true" />
-        </Link>
+        </ButtonLink>
         <ContextLink
           href={localizePath(locale, `/contact?course=${course.slug}`)}
           className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-[var(--brand-red)] transition hover:bg-[var(--brand-soft)]"

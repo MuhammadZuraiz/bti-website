@@ -78,7 +78,7 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
           { name: course.title, url: courseUrl }
         ])}
       />
-      <section className="bg-[var(--brand-soft)] py-14">
+      <section className="hero-surface py-14">
         <div className="container-page">
           <nav className="mb-6 text-sm font-bold text-[var(--brand-muted)]" aria-label="Breadcrumb">
             <Link href={localizePath(locale)}>Home</Link>
@@ -238,7 +238,7 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
                   <Link
                     key={related.slug}
                     href={localizePath(locale, `/courses/${related.slug}`)}
-                    className="rounded-lg border border-[var(--brand-border)] bg-white p-3 text-sm font-semibold text-[var(--brand-navy)] hover:border-[var(--brand-red)]"
+                    className="compact-card block rounded-lg p-3 text-sm font-semibold text-[var(--brand-navy)] transition hover:-translate-y-0.5 hover:border-[var(--brand-red)]"
                   >
                     {related.title}
                   </Link>

@@ -151,7 +151,7 @@ export function Header({ locale, dictionary }: HeaderProps) {
             <Link
               href={languageHref}
               onClick={() => trackEvent("language_switch", { locale })}
-              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[var(--brand-border)] px-3 text-sm font-bold text-[var(--brand-navy)]"
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[var(--brand-border)] px-3 text-sm font-bold text-[var(--brand-navy)] transition hover:border-[var(--brand-red)] hover:bg-[var(--brand-soft)]"
             >
               <Globe2 size={17} aria-hidden="true" />
               {alternateLocale.toUpperCase()}

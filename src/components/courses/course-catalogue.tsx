@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { CourseCard } from "@/components/courses/course-card";
+import { ButtonLink } from "@/components/ui/button-link";
 import { filterCourses, getCourseFilterOptions, type CourseFilters } from "@/lib/course-filter";
 import { trackEvent } from "@/lib/analytics";
 import type { Locale } from "@/lib/locale";
@@ -119,12 +120,9 @@ export function CourseCatalogue({ courses, locale, initialFilters }: Props) {
           <p className="supporting-copy mx-auto mt-3 max-w-xl">
             Speak with admissions and tell us what you want to learn.
           </p>
-          <a
-            href={`/${locale}/contact`}
-            className="mt-5 inline-flex min-h-11 items-center justify-center rounded-lg bg-[var(--brand-red)] px-4 py-2 text-sm font-semibold text-white"
-          >
+          <ButtonLink href={`/${locale}/contact`} className="mt-5">
             Ask About a Course
-          </a>
+          </ButtonLink>
         </div>
       )}
     </div>

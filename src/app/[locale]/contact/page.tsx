@@ -41,14 +41,19 @@ export default async function ContactPage({
   const context = getContactContext(resolvedSearchParams);
 
   return (
-    <section className="py-14">
+    <>
+      <section className="hero-surface py-14">
+        <div className="container-page">
+          <SectionHeading
+            as="h1"
+            eyebrow="Contact BTI"
+            title="Speak with BTI in Sharjah."
+            intro="Ask about course options, placement-test guidance, corporate training, schedules, and current availability."
+          />
+        </div>
+      </section>
+      <section className="py-14">
       <div className="container-page grid gap-10">
-        <SectionHeading
-          as="h1"
-          eyebrow="Contact BTI"
-          title="Speak with BTI in Sharjah."
-          intro="Ask about course options, placement-test guidance, corporate training, schedules, and current availability."
-        />
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="grid content-start gap-6">
             <article className="featured-card rounded-lg p-6">
@@ -127,6 +132,7 @@ export default async function ContactPage({
           />
         </div>
       </div>
-    </section>
+      </section>
+    </>
   );
 }
