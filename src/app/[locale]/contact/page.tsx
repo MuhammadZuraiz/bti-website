@@ -60,6 +60,12 @@ export default async function ContactPage({
               <MapPin size={30} className="text-[var(--brand-red)]" />
               <h2 className="section-title mt-4">Visit or contact</h2>
               <p className="supporting-copy mt-3">{siteConfig.address}</p>
+              <p className="mt-2 text-sm font-semibold text-[var(--brand-muted)]">
+                Toll-free:{" "}
+                <a className="text-[var(--brand-navy)] hover:text-[var(--brand-red)]" href={siteConfig.tollFreeHref}>
+                  {siteConfig.tollFreeDisplay}
+                </a>
+              </p>
               <ContactActions />
             </article>
             {siteConfig.openingHours.length ? (

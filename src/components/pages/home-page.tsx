@@ -20,6 +20,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ContextLink } from "@/components/conversion/context-link";
 import { OptionalImagePanel } from "@/components/media/optional-image-panel";
+import { StatsBand } from "@/components/sections/stats-band";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Badge } from "@/components/ui/badge";
@@ -172,15 +173,17 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
       </section>
 
       <section className="border-y border-[var(--brand-border)] bg-white py-5">
-        <div className="container-page grid gap-3 md:grid-cols-4">
+        <div className="container-page grid gap-3 md:grid-cols-3 lg:grid-cols-6">
           {trustItems.map((item) => (
             <div key={item.label} className="flex items-center gap-2 text-sm font-extrabold text-[var(--brand-navy)]">
-              <CheckCircle2 size={18} className="text-[var(--brand-green)]" />
+              <CheckCircle2 size={18} className="shrink-0 text-[var(--brand-green)]" />
               {item.label}
             </div>
           ))}
         </div>
       </section>
+
+      <StatsBand />
 
       <section className="py-16">
         <div className="container-page">

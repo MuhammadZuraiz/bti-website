@@ -18,14 +18,13 @@ function read(file) {
 
 const siteConfigSource = read("src/config/site.ts");
 
-// Placeholder values that must be confirmed by BTI before launch. These mirror
-// the comments in src/config/site.ts.
+// Placeholder values that must be confirmed by BTI before launch. Update these
+// if any field is reverted to an unconfirmed value. (BTI confirmed the core
+// identity details on 2026-06-16.)
 const placeholderChecks = [
-  ["address", "Bank Street, CB Building"],
-  ["landlineDisplay", "06 568 7222"],
-  ["mobileDisplay", "+971 52 608 3950"],
-  ["whatsappNumber", "971526083950"],
-  ["email (britain-institute.com)", "info@britain-institute.com"]
+  ["address (old placeholder)", "Bank Street, CB Building"],
+  ["email (old placeholder)", "info@britain-institute.com"],
+  ["siteUrl localhost", "localhost:3000"]
 ];
 
 const sections = [];

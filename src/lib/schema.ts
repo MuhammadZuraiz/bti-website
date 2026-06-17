@@ -1,4 +1,5 @@
 import { siteConfig } from "@/config/site";
+import { foundingYear } from "@/content/institute";
 import { getEnabledLocales, hasValidSocialUrl } from "@/lib/site-utils";
 import type { Course } from "@/types/course";
 
@@ -23,7 +24,7 @@ function availableLanguages() {
 function postalAddress() {
   return {
     "@type": "PostalAddress",
-    streetAddress: "Bank Street, CB Building, Apartments 303-304, Al Meraijah",
+    streetAddress: siteConfig.address,
     addressLocality: siteConfig.city,
     addressCountry: "AE"
   };
@@ -49,6 +50,9 @@ export function organizationSchema() {
     alternateName: siteConfig.shortName,
     url: siteConfig.siteUrl,
     logo: `${siteConfig.siteUrl}/images/bti-logo.jpg`,
+    ...(siteConfig.featureFlags.showFoundingYearText
+      ? { foundingDate: String(foundingYear) }
+      : {}),
     email: siteConfig.email,
     telephone,
     address: postalAddress(),

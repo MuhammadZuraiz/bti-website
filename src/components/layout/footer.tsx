@@ -249,6 +249,12 @@ export function Footer({ locale, dictionary }: FooterProps) {
             </a>
             <a
               className="flex gap-2 hover:text-white"
+              href={siteConfig.tollFreeHref}
+            >
+              <Phone size={18} /> Toll-free {siteConfig.tollFreeDisplay}
+            </a>
+            <a
+              className="flex gap-2 hover:text-white"
               href={`https://wa.me/${siteConfig.whatsappNumber}`}
             >
               <MessageCircle size={18} /> WhatsApp BTI
@@ -259,6 +265,14 @@ export function Footer({ locale, dictionary }: FooterProps) {
               </a>
             ) : null}
           </div>
+          {siteConfig.openingHours.length ? (
+            <div className="mt-4 text-sm text-white/72">
+              <p className="font-semibold text-white/82">Opening hours</p>
+              {siteConfig.openingHours.map((line) => (
+                <p key={line} className="leading-6">{line}</p>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div>

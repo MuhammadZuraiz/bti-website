@@ -26,15 +26,16 @@ export const dictionaries = {
       professionalReview: ""
     },
     home: {
-      eyebrow: "Professional Training in Sharjah",
-      headline: "Build practical skills. Take your next step with confidence.",
+      eyebrow: "Professional Training & Language Education in Sharjah",
+      headline:
+        "Advance your career with internationally focused training in Sharjah.",
       intro:
-        "Explore English, IELTS preparation, business, accounting, HR and professional training options designed to help you move forward with a clearer learning path and the right support.",
+        "Established in 2002, British Training Institute delivers IELTS and Cambridge-affiliated English programmes, professional certifications, and corporate training — in the classroom, live online, and in-house.",
       microcopy:
-        "Not sure where to begin? Tell us your goal and our admissions team will help you identify the right starting point.",
-      coursesTitle: "Start with the skill you want to build.",
+        "Not sure where to begin? Tell us your goal and our admissions team will help you identify the right course and starting point.",
+      coursesTitle: "Explore our training departments.",
       coursesIntro:
-        "Compare training options, explore practical outcomes, and speak with admissions for current schedules and availability.",
+        "From IELTS and Cambridge English to project management, finance, engineering, IT and quality — explore departments and speak with admissions for schedules and availability.",
       transformationTitle: "Move from uncertainty to a clear learning plan.",
       featuredTitle: "Popular ways to get started.",
       journeyTitle: "A simpler way to find your next course.",

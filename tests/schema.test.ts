@@ -11,13 +11,16 @@ import {
 } from "@/lib/schema";
 
 describe("structured data", () => {
-  it("outputs organization schema without fake aggregate ratings", () => {
+  it("outputs organization schema without fake ratings/reviews", () => {
     const schema = organizationSchema();
     expect(schema["@type"]).toBe("EducationalOrganization");
     const text = JSON.stringify(schema);
     expect(text).not.toContain("aggregateRating");
     expect(text).not.toContain("review");
-    expect(text).not.toContain("foundingDate");
+  });
+
+  it("includes the BTI-confirmed founding date", () => {
+    expect(organizationSchema().foundingDate).toBe("2002");
   });
 
   it("uses a normalised E.164 telephone, not the display format", () => {
@@ -47,12 +50,13 @@ describe("structured data", () => {
     expect(schema.contactPoint.availableLanguage).toEqual(["English"]);
   });
 
-  it("omits sameAs and openingHours until approved values exist", () => {
+  it("includes approved social profiles and opening hours", () => {
     const schema = organizationSchema();
-    // No social URLs configured in the test environment.
-    expect(schema).not.toHaveProperty("sameAs");
-    expect(schema).not.toHaveProperty("openingHours");
-    expect(localBusinessSchema()).not.toHaveProperty("openingHours");
+    // BTI confirmed social links and opening hours.
+    expect(Array.isArray(schema.sameAs)).toBe(true);
+    expect((schema.sameAs as string[]).length).toBeGreaterThan(0);
+    expect(schema).toHaveProperty("openingHours");
+    expect(localBusinessSchema()).toHaveProperty("openingHours");
   });
 
   it("outputs course schema without fake prices or guarantees", () => {
