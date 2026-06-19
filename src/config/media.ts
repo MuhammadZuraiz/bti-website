@@ -1,4 +1,4 @@
-import type { Course } from "@/types/course";
+import type { Course } from "@/types/catalogue";
 
 // Single source of truth for the imagery the site can use. Images are OPTIONAL:
 // nothing here ships a placeholder. A slot only appears once an approved,
@@ -56,7 +56,7 @@ export function courseImagePathHint(slug: string): string {
 }
 
 export function resolveCourseImage(
-  course: Pick<Course, "slug" | "title" | "category" | "imageSrc" | "imageAlt">
+  course: Pick<Course, "slug" | "title" | "imageSrc" | "imageAlt">
 ): { src: string; alt: string } | null {
   if (!course.imageSrc) {
     return null;

@@ -1,7 +1,8 @@
 import { siteConfig } from "@/config/site";
+import { courseHref } from "@/content/catalogue";
 import { foundingYear } from "@/content/institute";
 import { getEnabledLocales, hasValidSocialUrl } from "@/lib/site-utils";
-import type { Course } from "@/types/course";
+import type { Course } from "@/types/catalogue";
 
 // E.164 telephone derived from the approved tel: link, never the display text.
 const telephone = siteConfig.landlineHref.replace(/^tel:/, "");
@@ -98,7 +99,7 @@ export function courseSchema(course: Course, locale = "en") {
     name: course.title,
     description: course.seoDescription,
     inLanguage: locale,
-    url: `${siteConfig.siteUrl}/${locale}/courses/${course.slug}`,
+    url: `${siteConfig.siteUrl}/${locale}${courseHref(course)}`,
     provider: {
       "@type": "EducationalOrganization",
       name: siteConfig.businessName,

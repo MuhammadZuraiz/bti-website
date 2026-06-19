@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { siteConfig } from "@/config/site";
-import { courses } from "@/content/courses";
+import { allCourses } from "@/content/catalogue";
 import {
   breadcrumbSchema,
   courseSchema,
@@ -60,10 +60,12 @@ describe("structured data", () => {
   });
 
   it("outputs course schema without fake prices or guarantees", () => {
-    const schema = courseSchema(courses[0]);
+    const schema = courseSchema(allCourses[0]);
     const text = JSON.stringify(schema);
     expect(schema["@type"]).toBe("Course");
-    expect(schema.url).toContain(`/en/courses/${courses[0].slug}`);
+    expect(schema.url).toContain(
+      `/en/courses/${allCourses[0].departmentSlug}/${allCourses[0].slug}`
+    );
     expect(schema.inLanguage).toBe("en");
     expect(text).not.toContain("offers");
     expect(text).not.toContain("guarantee");

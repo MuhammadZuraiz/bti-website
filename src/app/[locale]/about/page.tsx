@@ -12,7 +12,7 @@ import {
   vision,
   whyChoose
 } from "@/content/institute";
-import { courseCategories } from "@/content/courses";
+import { allDepartments } from "@/content/catalogue";
 import { isLocale, localizePath, type Locale } from "@/lib/locale";
 import { localizedMetadata } from "@/lib/metadata";
 import { isLocaleEnabled } from "@/lib/site-utils";
@@ -92,10 +92,10 @@ export default async function AboutPage({ params }: { params: Params }) {
             <article className="muted-panel rounded-lg p-6">
               <h2 className="card-title text-2xl">Training areas</h2>
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                {courseCategories.map((category) => (
-                  <p key={category} className="flex gap-2 text-[var(--brand-muted)]">
+                {allDepartments.map((department) => (
+                  <p key={department.slug} className="flex gap-2 text-[var(--brand-muted)]">
                     <CheckCircle2 size={18} className="mt-1 shrink-0 text-[var(--brand-green)]" />
-                    {category}
+                    {department.name}
                   </p>
                 ))}
               </div>

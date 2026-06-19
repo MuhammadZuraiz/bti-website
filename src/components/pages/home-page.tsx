@@ -26,7 +26,12 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { JsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/config/site";
-import { courses, featuredCourses } from "@/content/courses";
+import {
+  allDepartments,
+  departmentHref,
+  featuredDepartments,
+  getCoursesByDepartment
+} from "@/content/catalogue";
 import { resources } from "@/content/resources";
 import type { dictionaries } from "@/content/i18n";
 import { getTrustItems } from "@/lib/trust";
@@ -192,20 +197,19 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
             intro={dictionary.home.coursesIntro}
           />
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {courses.map((course, index) => {
+            {allDepartments.map((department, index) => {
               const Icon = categoryIcons[index] ?? Sparkles;
               return (
                 <Link
-                  key={course.slug}
-                  href={localizePath(locale, `/courses/${course.slug}`)}
+                  key={department.slug}
+                  href={localizePath(locale, departmentHref(department))}
                   className={`${index < 2 ? "featured-card" : "compact-card"} group rounded-lg p-5 transition hover:-translate-y-0.5 hover:border-[var(--brand-red)]`}
                 >
                   <Icon size={28} className="text-[var(--brand-red)]" />
-                  <h3 className="card-title mt-4">
-                    {course.category}
-                  </h3>
-                  <p className="helper-text mt-2">
-                    {course.shortDescription}
+                  <h3 className="card-title mt-4">{department.name}</h3>
+                  <p className="helper-text mt-2">{department.shortDescription}</p>
+                  <p className="meta-label mt-3 text-[var(--brand-red)]">
+                    {getCoursesByDepartment(department.slug).length} courses
                   </p>
                 </Link>
               );
@@ -259,26 +263,20 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
         <div className="container-page">
           <SectionHeading title={dictionary.home.featuredTitle} />
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {featuredCourses.map((course) => (
-              <article key={course.slug} className="compact-card flex h-full flex-col rounded-lg p-5">
-                <p className="meta-label text-[var(--brand-red)]">
-                  {course.category}
-                </p>
-                <h3 className="card-title mt-3">
-                  {course.title}
-                </h3>
-                <p className="helper-text mt-3 flex-1">
-                  {course.shortDescription}
-                </p>
+            {featuredDepartments.map((department) => (
+              <article key={department.slug} className="compact-card flex h-full flex-col rounded-lg p-5">
+                <p className="meta-label text-[var(--brand-red)]">Department</p>
+                <h3 className="card-title mt-3">{department.name}</h3>
+                <p className="helper-text mt-3 flex-1">{department.shortDescription}</p>
                 <p className="meta-label mt-4">
-                  For {course.audience[0]}
+                  {getCoursesByDepartment(department.slug).length} courses
                 </p>
                 <div className="mt-5 grid gap-2">
-                  <ButtonLink href={localizePath(locale, `/courses/${course.slug}`)} variant="dark">
-                    Explore Programme
+                  <ButtonLink href={localizePath(locale, departmentHref(department))} variant="dark">
+                    Explore Department
                   </ButtonLink>
                   <ContextLink
-                    href={localizePath(locale, `/contact?course=${course.slug}`)}
+                    href={localizePath(locale, "/contact")}
                     className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-[var(--brand-red)] transition hover:bg-[var(--brand-soft)]"
                   >
                     Ask Admissions

@@ -4,13 +4,13 @@ import { getContactContext } from "@/lib/contact-context";
 describe("contact context", () => {
   it("validates course query parameters against course data", () => {
     const context = getContactContext({
-      course: "ielts-preparation-course-sharjah"
+      course: "ielts-preparation"
     });
 
     expect(context.kind).toBe("course");
-    expect(context.formTitle).toBe("Ask about IELTS Preparation Course in Sharjah");
-    expect(context.courseInterest).toBe("IELTS Preparation Course in Sharjah");
-    expect(context.courseSlug).toBe("ielts-preparation-course-sharjah");
+    expect(context.formTitle).toBe("Register for IELTS Preparation");
+    expect(context.courseInterest).toBe("IELTS Preparation");
+    expect(context.courseSlug).toBe("ielts-preparation");
   });
 
   it("ignores arbitrary course query text", () => {

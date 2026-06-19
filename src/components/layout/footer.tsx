@@ -9,7 +9,7 @@ import {
   Phone
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
-import { courseCategories } from "@/content/courses";
+import { allDepartments } from "@/content/catalogue";
 import type { dictionaries } from "@/content/i18n";
 import { localizePath, type Locale } from "@/lib/locale";
 import {
@@ -120,8 +120,15 @@ export function Footer({ locale, dictionary }: FooterProps) {
               />
             </summary>
             <ul className="grid gap-1.5 pb-3 text-sm leading-5 text-white/78">
-              {courseCategories.map((category) => (
-                <li key={category}>{category}</li>
+              {allDepartments.map((department) => (
+                <li key={department.slug}>
+                  <Link
+                    href={localizePath(locale, `/courses/${department.slug}`)}
+                    className="inline-flex min-h-8 items-center transition-colors hover:text-white"
+                  >
+                    {department.name}
+                  </Link>
+                </li>
               ))}
             </ul>
           </details>
@@ -280,8 +287,15 @@ export function Footer({ locale, dictionary }: FooterProps) {
             Course Areas
           </h2>
           <ul className="mt-3 grid gap-2 text-sm leading-6 text-white/78">
-            {courseCategories.map((category) => (
-              <li key={category}>{category}</li>
+            {allDepartments.map((department) => (
+              <li key={department.slug}>
+                <Link
+                  href={localizePath(locale, `/courses/${department.slug}`)}
+                  className="transition-colors hover:text-white"
+                >
+                  {department.name}
+                </Link>
+              </li>
             ))}
           </ul>
         </div>

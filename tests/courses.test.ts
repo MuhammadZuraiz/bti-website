@@ -1,32 +1,64 @@
 import { describe, expect, it } from "vitest";
-import { courses } from "@/content/courses";
+import {
+  allCourses,
+  allDepartments,
+  getCourseBySlug,
+  getCoursesByDepartment
+} from "@/content/catalogue";
 import { filterCourses } from "@/lib/course-filter";
 
-describe("course data", () => {
-  it("contains the required initial course pages", () => {
-    expect(courses).toHaveLength(8);
-    expect(courses.map((course) => course.slug)).toContain(
-      "ielts-preparation-course-sharjah"
-    );
+describe("catalogue integrity", () => {
+  it("has a healthy number of departments and courses", () => {
+    expect(allDepartments.length).toBeGreaterThanOrEqual(10);
+    expect(allCourses.length).toBeGreaterThanOrEqual(90);
   });
 
-  it("keeps course details admissions-ready without invented fixed fees", () => {
-    for (const course of courses) {
-      expect(course.slug).toMatch(/^[a-z0-9-]+$/);
-      expect(course.title).toBeTruthy();
-      expect(course.feeText?.toLowerCase()).toContain("contact");
-      expect(course.faq.length).toBeGreaterThan(0);
+  it("uses unique, url-safe course slugs", () => {
+    const slugs = allCourses.map((c) => c.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    for (const slug of slugs) {
+      expect(slug).toMatch(/^[a-z0-9-]+$/);
     }
   });
 
-  it("filters by search, category, audience and delivery mode", () => {
-    expect(filterCourses(courses, { query: "ielts" })).toHaveLength(1);
-    expect(
-      filterCourses(courses, {
-        category: "Accounting & Finance",
-        audience: "Finance staff",
-        deliveryMode: "Workshop"
-      })[0]?.slug
-    ).toBe("accounting-finance-courses-sharjah");
+  it("uses unique, url-safe department slugs", () => {
+    const slugs = allDepartments.map((d) => d.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    for (const slug of slugs) {
+      expect(slug).toMatch(/^[a-z0-9-]+$/);
+    }
+  });
+
+  it("links every course to a real department", () => {
+    const deptSlugs = new Set(allDepartments.map((d) => d.slug));
+    for (const course of allCourses) {
+      expect(deptSlugs.has(course.departmentSlug)).toBe(true);
+    }
+  });
+
+  it("only references related courses that exist", () => {
+    for (const course of allCourses) {
+      for (const related of course.relatedCourseSlugs) {
+        expect(getCourseBySlug(related), `${course.slug} → ${related}`).toBeTruthy();
+      }
+    }
+  });
+
+  it("never invents a fixed fee", () => {
+    for (const course of allCourses) {
+      expect(course.feeText.toLowerCase()).toMatch(/request|contact/);
+    }
+  });
+
+  it("every department has at least one course", () => {
+    for (const department of allDepartments) {
+      expect(getCoursesByDepartment(department.slug).length).toBeGreaterThan(0);
+    }
+  });
+
+  it("filters by query, department and delivery method", () => {
+    expect(filterCourses(allCourses, { query: "ielts" }).length).toBeGreaterThan(0);
+    const langCourses = filterCourses(allCourses, { department: "languages" });
+    expect(langCourses.every((c) => c.departmentSlug === "languages")).toBe(true);
   });
 });

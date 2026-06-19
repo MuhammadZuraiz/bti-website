@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getCourseBySlug } from "@/content/courses";
+import { getCourseBySlug } from "@/content/catalogue";
 import { getResourceBySlug } from "@/content/resources";
 
 export const leadTypes = [

@@ -25,7 +25,7 @@ describe("lead validation", () => {
     const result = leadPayloadSchema.safeParse({
       ...baseLead,
       leadType: "course-enquiry",
-      courseSlug: "ielts-preparation-course-sharjah"
+      courseSlug: "ielts-preparation"
     });
     expect(result.success).toBe(true);
   });

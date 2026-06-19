@@ -24,6 +24,7 @@
     "test:e2e:ui": "playwright test --ui",
     "check:seo-headers": "node scripts/check-seo-headers.mjs",
     "check:readiness": "node scripts/check-readiness.mjs",
+    "courses:audit": "node scripts/audit-course-content.mjs",
     "leads:export": "node scripts/export-leads.mjs"
   },
   "dependencies": {
