@@ -63,6 +63,8 @@ export const siteConfig = {
     showAccreditationLogos: false,
     showPartnerLogos: false,
     showTestimonials: false,
+    // Homepage course-name marquee. Decorative; safe to toggle off.
+    showCourseTicker: true,
     requireLeadCaptureForDownloads: false,
     // When analytics is configured, also require cookie consent before loading
     // it (shows a consent banner). Decide with BTI — see docs/analytics-events.md.

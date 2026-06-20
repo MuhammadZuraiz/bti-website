@@ -11,7 +11,9 @@ const eslintConfig = [
       "exports/**",
       ".tools/**",
       "public/**",
-      "next-env.d.ts"
+      "next-env.d.ts",
+      // Exported design-prototype bundle — reference only, not project source.
+      "docs/design-handoff/**/prototype/**"
     ]
   },
   ...nextCoreWebVitals,

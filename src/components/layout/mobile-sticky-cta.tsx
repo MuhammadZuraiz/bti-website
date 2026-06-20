@@ -53,12 +53,12 @@ export function MobileStickyCta({ locale, dictionary }: Props) {
 
   if (mode === "compact") {
     return (
-      <div className="mobile-sticky-cta fixed inset-x-0 bottom-0 z-50 border-t border-[var(--brand-border)] bg-white/96 px-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 shadow-[0_-10px_24px_rgba(23,20,72,0.1)] backdrop-blur md:hidden">
+      <div className="mobile-sticky-cta fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[var(--navy-900)]/96 px-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 shadow-[0_-10px_24px_rgba(0,0,0,0.35)] backdrop-blur md:hidden">
         <div className="mx-auto grid max-w-sm grid-cols-2 gap-2">
           <a
             href={siteConfig.landlineHref}
             onClick={() => trackEvent("phone_click", { placement: "sticky_mobile_compact" })}
-            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[var(--brand-border)] text-xs font-semibold text-[var(--brand-navy)]"
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-white/25 text-xs font-semibold text-white"
           >
             <Phone size={16} aria-hidden="true" />
             {dictionary.common.call}
@@ -82,7 +82,7 @@ export function MobileStickyCta({ locale, dictionary }: Props) {
         <a
           href={siteConfig.landlineHref}
           onClick={() => trackEvent("phone_click", { placement: "sticky_mobile" })}
-          className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg text-xs font-semibold text-[var(--brand-navy)]"
+          className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg text-xs font-semibold text-white"
         >
           <Phone size={16} aria-hidden="true" />
           {dictionary.common.call}
