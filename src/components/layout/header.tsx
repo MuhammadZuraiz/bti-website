@@ -36,22 +36,9 @@ function switchLocalePath(pathname: string, locale: Locale) {
 
 export function Header({ locale, dictionary }: HeaderProps) {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const [menuPathname, setMenuPathname] = useState(pathname);
-
-  // The homepage hero is dark, so the header floats transparent over it and
-  // turns solid navy once scrolled. Every other page starts solid.
-  const isHome = (pathname.replace(/^\/(en|ar)/, "") || "/") === "/";
-  const solid = scrolled || open || !isHome;
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   if (menuPathname !== pathname) {
     setMenuPathname(pathname);
@@ -99,13 +86,7 @@ export function Header({ locale, dictionary }: HeaderProps) {
   }, [closeMenu, open]);
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        solid
-          ? "border-b border-white/10 bg-[var(--navy-900)]/95 backdrop-blur"
-          : "border-b border-transparent bg-transparent"
-      }`}
-    >
+    <header className="sticky top-0 z-50 border-b border-[var(--brand-border)] bg-white/95 backdrop-blur">
       <div className="container-page flex min-h-20 items-center justify-between gap-4">
         <Link
           href={localizePath(locale)}
@@ -121,10 +102,10 @@ export function Header({ locale, dictionary }: HeaderProps) {
             priority
           />
           <span className="hidden min-w-0 sm:block">
-            <span className="block text-sm font-extrabold leading-tight text-white">
+            <span className="block text-sm font-extrabold leading-tight text-[var(--brand-navy)]">
               {siteConfig.businessName}
             </span>
-            <span className="block text-xs font-semibold text-white/65">
+            <span className="block text-xs font-semibold text-[var(--brand-muted)]">
               {siteConfig.city} Training Centre
             </span>
           </span>
@@ -132,7 +113,7 @@ export function Header({ locale, dictionary }: HeaderProps) {
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
           <details className="nav-dropdown relative">
-            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1 rounded-lg px-3 text-sm font-bold text-white/85 hover:bg-white/10 hover:text-white">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1 rounded-lg px-3 text-sm font-bold text-[var(--brand-navy)] hover:bg-[var(--brand-soft)]">
               {nav.courses}
               <ChevronDown size={16} aria-hidden="true" />
             </summary>
@@ -158,7 +139,7 @@ export function Header({ locale, dictionary }: HeaderProps) {
             <Link
               key={link.href}
               href={link.href}
-              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-white/85 transition-colors hover:bg-white/10 hover:text-white"
+              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-[var(--brand-navy)] hover:bg-[var(--brand-soft)]"
             >
               {link.label}
             </Link>
@@ -170,7 +151,7 @@ export function Header({ locale, dictionary }: HeaderProps) {
             <Link
               href={languageHref}
               onClick={() => trackEvent("language_switch", { locale })}
-              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/30 px-3 text-sm font-bold text-white transition hover:border-white/60 hover:bg-white/10"
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[var(--brand-border)] px-3 text-sm font-bold text-[var(--brand-navy)] transition hover:border-[var(--brand-red)] hover:bg-[var(--brand-soft)]"
             >
               <Globe2 size={17} aria-hidden="true" />
               {alternateLocale.toUpperCase()}
@@ -188,7 +169,7 @@ export function Header({ locale, dictionary }: HeaderProps) {
           aria-expanded={open}
           aria-controls="mobile-primary-nav"
           onClick={() => setOpen((value) => !value)}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-white/30 text-white lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-[var(--brand-border)] text-[var(--brand-navy)] lg:hidden"
         >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>

@@ -16,44 +16,37 @@ test.beforeEach(async ({}, testInfo) => {
 test("homepage to English course enquiry", async ({ page }) => {
   const lead = syntheticLead("english");
   await page.goto("/en");
-  // The homepage course finder links straight to the course page.
-  await page
-    .locator('a[href="/en/courses/languages/general-english"]')
-    .first()
-    .click();
-  await expect(page).toHaveURL(/\/en\/courses\/languages\/general-english$/);
+  await page.getByRole("link", { name: /English Language/ }).first().click();
+  await expect(page).toHaveURL(/\/en\/courses\/english-language-courses-sharjah$/);
 
   await fillBaseLeadFields(page, lead);
   await page.getByRole("textbox", { name: "Message" }).fill("E2E synthetic English course enquiry.");
-  const reference = await submitAndCaptureReference(page, "Register / Request Information");
+  const reference = await submitAndCaptureReference(page, "Ask Admissions");
 
   const row = await fetchLeadByReference(reference);
   expect(row).toMatchObject({
     leadType: "course-enquiry",
-    courseSlug: "general-english",
+    courseSlug: "english-language-courses-sharjah",
     fullName: lead.name,
     deliveryStatus: "delivered",
-    sourcePage: "/en/courses/languages/general-english"
+    sourcePage: "/en/courses/english-language-courses-sharjah"
   });
 });
 
 test("homepage to IELTS course enquiry", async ({ page }) => {
   const lead = syntheticLead("ielts");
   await page.goto("/en");
-  await page
-    .locator('a[href="/en/courses/languages/ielts-preparation"]')
-    .first()
-    .click();
-  await expect(page).toHaveURL(/\/en\/courses\/languages\/ielts-preparation$/);
+  await page.getByRole("link", { name: /IELTS Preparation/ }).first().click();
+  await expect(page).toHaveURL(/\/en\/courses\/ielts-preparation-course-sharjah$/);
 
   await fillBaseLeadFields(page, lead);
   await page.getByRole("textbox", { name: "Message" }).fill("E2E synthetic IELTS enquiry.");
-  const reference = await submitAndCaptureReference(page, "Register / Request Information");
+  const reference = await submitAndCaptureReference(page, "Ask Admissions");
 
   const row = await fetchLeadByReference(reference);
   expect(row).toMatchObject({
     leadType: "course-enquiry",
-    courseSlug: "ielts-preparation"
+    courseSlug: "ielts-preparation-course-sharjah"
   });
 });
 
@@ -127,18 +120,15 @@ test("resource-request journey preserves resource context", async ({ page }) => 
 
 test("course query-parameter context reaches the lead record", async ({ page }) => {
   const lead = syntheticLead("course-context");
-  await page.goto("/en/contact?course=ielts-preparation");
-  // The course context drives the form heading ("Register for <course>").
-  await expect(
-    page.getByRole("heading", { name: /Register for/ }).first()
-  ).toBeVisible();
+  await page.goto("/en/contact?course=ielts-preparation-course-sharjah");
+  await expect(page.getByRole("heading", { name: /Ask about/ }).first()).toBeVisible();
 
   await fillBaseLeadFields(page, lead);
   await page.getByRole("textbox", { name: "Message" }).fill("E2E synthetic course-context enquiry.");
   const reference = await submitAndCaptureReference(page, "Ask Admissions");
 
   const row = await fetchLeadByReference(reference);
-  expect(row?.courseSlug).toBe("ielts-preparation");
+  expect(row?.courseSlug).toBe("ielts-preparation-course-sharjah");
 });
 
 test("UTM parameters are stored with the lead", async ({ page }) => {

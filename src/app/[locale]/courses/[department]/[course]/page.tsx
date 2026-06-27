@@ -126,42 +126,42 @@ export default async function CoursePage({ params }: { params: Params }) {
               ) : null}
               <h2 className="card-title text-xl">Course information</h2>
               <dl className="mt-4 grid gap-4 text-sm">
-                <div>
-                  <dt className="flex items-start gap-3 font-semibold text-[var(--brand-ink)]">
-                    <Clock size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" />
-                    Duration
-                  </dt>
-                  <dd className="mt-0.5 pl-[30px] text-[var(--brand-muted)]">{course.durationText}</dd>
+                <div className="flex gap-3">
+                  <Clock size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" />
+                  <div>
+                    <dt className="font-semibold text-[var(--brand-ink)]">Duration</dt>
+                    <dd className="mt-0.5 text-[var(--brand-muted)]">{course.durationText}</dd>
+                  </div>
                 </div>
-                <div>
-                  <dt className="flex items-start gap-3 font-semibold text-[var(--brand-ink)]">
-                    <Clock size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" />
-                    Training hours
-                  </dt>
-                  <dd className="mt-0.5 pl-[30px] text-[var(--brand-muted)]">{course.trainingHours}</dd>
+                <div className="flex gap-3">
+                  <Clock size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" />
+                  <div>
+                    <dt className="font-semibold text-[var(--brand-ink)]">Training hours</dt>
+                    <dd className="mt-0.5 text-[var(--brand-muted)]">{course.trainingHours}</dd>
+                  </div>
                 </div>
-                <div>
-                  <dt className="flex items-start gap-3 font-semibold text-[var(--brand-ink)]">
-                    <MonitorPlay size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" />
-                    Delivery
-                  </dt>
-                  <dd className="mt-0.5 pl-[30px] text-[var(--brand-muted)]">
-                    {course.deliveryMethods.join(", ")}
-                  </dd>
+                <div className="flex gap-3">
+                  <MonitorPlay size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" />
+                  <div>
+                    <dt className="font-semibold text-[var(--brand-ink)]">Delivery</dt>
+                    <dd className="mt-0.5 text-[var(--brand-muted)]">
+                      {course.deliveryMethods.join(", ")}
+                    </dd>
+                  </div>
                 </div>
-                <div>
-                  <dt className="flex items-start gap-3 font-semibold text-[var(--brand-ink)]">
-                    <GraduationCap size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" />
-                    Certification
-                  </dt>
-                  <dd className="mt-0.5 pl-[30px] text-[var(--brand-muted)]">{course.certificationText}</dd>
+                <div className="flex gap-3">
+                  <GraduationCap size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" />
+                  <div>
+                    <dt className="font-semibold text-[var(--brand-ink)]">Certification</dt>
+                    <dd className="mt-0.5 text-[var(--brand-muted)]">{course.certificationText}</dd>
+                  </div>
                 </div>
-                <div>
-                  <dt className="flex items-start gap-3 font-semibold text-[var(--brand-ink)]">
-                    <GraduationCap size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" />
-                    Fees
-                  </dt>
-                  <dd className="mt-0.5 pl-[30px] text-[var(--brand-muted)]">{course.feeText}</dd>
+                <div className="flex gap-3">
+                  <GraduationCap size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" />
+                  <div>
+                    <dt className="font-semibold text-[var(--brand-ink)]">Fees</dt>
+                    <dd className="mt-0.5 text-[var(--brand-muted)]">{course.feeText}</dd>
+                  </div>
                 </div>
               </dl>
             </aside>

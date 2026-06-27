@@ -30,9 +30,7 @@ test.describe("desktop navigation", () => {
   test("course menu lists programmes", async ({ page }) => {
     await page.goto("/en");
     await page.locator("header summary", { hasText: "Courses" }).click();
-    await page
-      .getByRole("link", { name: "All departments & courses" })
-      .click();
+    await page.getByRole("link", { name: "View all programmes" }).click();
     await expect(page).toHaveURL(/\/en\/courses$/);
   });
 
@@ -82,25 +80,20 @@ test.describe("mobile navigation", () => {
 });
 
 test.describe("conditional rendering", () => {
-  test("directions link is shown when a map URL is configured", async ({ page }) => {
-    // siteConfig.mapUrl now ships a confirmed BTI value, so the contact page
-    // exposes a "Directions" link.
+  test("map link is hidden when no map URL is configured", async ({ page }) => {
     await page.goto("/en/contact");
-    await expect(
-      page.getByRole("link", { name: /directions/i }).first()
-    ).toBeVisible();
+    await expect(page.getByRole("link", { name: /directions/i })).toHaveCount(0);
   });
 
-  test("social links are shown when configured", async ({ page }) => {
-    // Confirmed BTI social profiles are now configured, so the footer renders
-    // them. Both the mobile and desktop footer blocks exist in the DOM (one is
-    // CSS-hidden), so includeHidden + a presence check is the stable assertion.
+  test("social links are hidden when not configured", async ({ page }) => {
     await page.goto("/en");
     const footer = page.locator("footer");
+    // includeHidden so a stray link in a collapsed mobile accordion or the
+    // CSS-hidden desktop block would still be caught.
     for (const name of ["Instagram", "Facebook", "LinkedIn"]) {
       await expect(
-        footer.getByRole("link", { name, includeHidden: true }).first()
-      ).toBeAttached();
+        footer.getByRole("link", { name, includeHidden: true })
+      ).toHaveCount(0);
     }
   });
 

@@ -4,8 +4,7 @@ import { expect, test } from "@playwright/test";
 const auditedRoutes = [
   "/en",
   "/en/courses",
-  "/en/courses/languages",
-  "/en/courses/languages/ielts-preparation",
+  "/en/courses/english-language-courses-sharjah",
   "/en/contact",
   "/en/placement-test",
   "/en/corporate-training",

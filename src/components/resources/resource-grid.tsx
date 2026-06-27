@@ -8,14 +8,6 @@ import type { Resource } from "@/content/resources";
 import { type Locale, localizePath } from "@/lib/locale";
 import { isResourcePublished } from "@/lib/site-utils";
 
-// Cycling accent edge so a row of resource cards reads as a colourful set,
-// matching the course cards. Decorative only (applied to the border).
-const RESOURCE_ACCENTS = [
-  "var(--brand-red)",
-  "var(--brand-blue)",
-  "var(--brand-gold)"
-];
-
 export function ResourceGrid({
   resources,
   locale
@@ -28,11 +20,6 @@ export function ResourceGrid({
       {resources.map((resource, index) => (
         <article
           key={resource.slug}
-          style={{
-            borderInlineStartWidth: 4,
-            borderInlineStartColor:
-              RESOURCE_ACCENTS[index % RESOURCE_ACCENTS.length]
-          }}
           className={`${index === 0 ? "featured-card md:col-span-2 xl:col-span-1" : "compact-card"} flex h-full flex-col rounded-lg p-5`}
         >
           <div className={`${index === 0 ? "bg-[var(--brand-navy)] text-white" : "bg-[var(--brand-soft)] text-[var(--brand-red)]"} grid h-24 place-items-center rounded-lg`}>

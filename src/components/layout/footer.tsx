@@ -53,7 +53,7 @@ export function Footer({ locale, dictionary }: FooterProps) {
     socialLinks.some(([, url]) => hasValidSocialUrl(url));
 
   return (
-    <footer className="border-t border-white/10 bg-[var(--navy-footer)] text-white">
+    <footer className="section-navy border-t border-[var(--brand-border)] text-white">
       <div className="container-page py-5 md:hidden">
         <div className="flex items-center gap-3">
           <Image
