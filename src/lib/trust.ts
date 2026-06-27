@@ -3,29 +3,18 @@ import { siteConfig } from "@/config/site";
 export type TrustItem = {
   label: string;
   enabled: boolean;
-  requiresApproval?: boolean;
 };
 
+// Short trust signals for the home strip. Claims are confirmed by BTI and gated
+// by feature flags so they can be toggled centrally.
 export function getTrustItems(): TrustItem[] {
+  const flags = siteConfig.featureFlags;
   return [
-    { label: "Sharjah-based training centre", enabled: true },
-    { label: "English and professional programmes", enabled: true },
-    { label: "Placement-test support", enabled: true },
-    { label: "Corporate training options", enabled: true },
-    {
-      label: "SPEA listing statement",
-      enabled: siteConfig.featureFlags.showSpeaListing,
-      requiresApproval: true
-    },
-    {
-      label: "Centre ID 50",
-      enabled: siteConfig.featureFlags.showCentreId,
-      requiresApproval: true
-    },
-    {
-      label: "IELTS venue statement",
-      enabled: siteConfig.featureFlags.showIeltsVenueStatement,
-      requiresApproval: true
-    }
+    { label: "Established in 2002", enabled: flags.showFoundingYearText },
+    { label: "IELTS Test Centre", enabled: flags.showIeltsTestCentre },
+    { label: "Cambridge-affiliated training", enabled: flags.showCambridgePartner },
+    { label: "ISO certified quality system", enabled: flags.showIsoCertified },
+    { label: "Classroom, online & corporate training", enabled: true },
+    { label: "Sharjah-based training centre", enabled: true }
   ].filter((item) => item.enabled);
 }

@@ -386,3 +386,50 @@
     font-size: 1.125rem;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Motion: scroll reveal + image hover
+   Elements start hidden and are revealed by the <Reveal> client component
+   (which adds .is-visible when scrolled into view). A <noscript> override in
+   the root layout keeps content visible without JS, and reduced-motion users
+   always see the final state immediately.
+--------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 620ms var(--ease-out),
+    transform 620ms var(--ease-out);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Gentle zoom on photo panels when their card is hovered. */
+.media-zoom {
+  overflow: hidden;
+}
+
+.media-zoom img {
+  transition: transform 600ms var(--ease-out);
+}
+
+.media-zoom:hover img {
+  transform: scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .media-zoom img,
+  .media-zoom:hover img {
+    transform: none;
+    transition: none;
+  }
+}

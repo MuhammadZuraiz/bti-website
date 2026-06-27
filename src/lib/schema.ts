@@ -1,6 +1,8 @@
 import { siteConfig } from "@/config/site";
+import { courseHref } from "@/content/catalogue";
+import { foundingYear } from "@/content/institute";
 import { getEnabledLocales, hasValidSocialUrl } from "@/lib/site-utils";
-import type { Course } from "@/types/course";
+import type { Course } from "@/types/catalogue";
 
 // E.164 telephone derived from the approved tel: link, never the display text.
 const telephone = siteConfig.landlineHref.replace(/^tel:/, "");
@@ -23,7 +25,7 @@ function availableLanguages() {
 function postalAddress() {
   return {
     "@type": "PostalAddress",
-    streetAddress: "Bank Street, CB Building, Apartments 303-304, Al Meraijah",
+    streetAddress: siteConfig.address,
     addressLocality: siteConfig.city,
     addressCountry: "AE"
   };
@@ -49,6 +51,9 @@ export function organizationSchema() {
     alternateName: siteConfig.shortName,
     url: siteConfig.siteUrl,
     logo: `${siteConfig.siteUrl}/images/bti-logo.jpg`,
+    ...(siteConfig.featureFlags.showFoundingYearText
+      ? { foundingDate: String(foundingYear) }
+      : {}),
     email: siteConfig.email,
     telephone,
     address: postalAddress(),
@@ -94,7 +99,7 @@ export function courseSchema(course: Course, locale = "en") {
     name: course.title,
     description: course.seoDescription,
     inLanguage: locale,
-    url: `${siteConfig.siteUrl}/${locale}/courses/${course.slug}`,
+    url: `${siteConfig.siteUrl}/${locale}${courseHref(course)}`,
     provider: {
       "@type": "EducationalOrganization",
       name: siteConfig.businessName,

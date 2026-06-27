@@ -5,7 +5,7 @@ import {
   type DeploymentEnvironment
 } from "@/config/deployment";
 import { siteConfig } from "@/config/site";
-import { courses } from "@/content/courses";
+import { allCourses, allDepartments, courseHref, departmentHref } from "@/content/catalogue";
 import { getEnabledLocales, isLegalPagePublished } from "@/lib/site-utils";
 
 const legalRoutes = ["privacy", "cookies", "terms", "accessibility"] as const;
@@ -74,18 +74,23 @@ export function buildSitemap(
     }))
   );
 
-  const courseRoutes = enabledLocales.flatMap((locale) =>
-    courses.map((course) => ({
-      url: `${siteConfig.siteUrl}/${locale}/courses/${course.slug}`,
-      ...(course.lastReviewedAt
-        ? { lastModified: course.lastReviewedAt }
-        : {}),
+  const departmentRoutes = enabledLocales.flatMap((locale) =>
+    allDepartments.map((department) => ({
+      url: `${siteConfig.siteUrl}/${locale}${departmentHref(department)}`,
       changeFrequency: "weekly" as const,
-      priority: 0.85
+      priority: 0.8
     }))
   );
 
-  return [...localizedStatic, ...courseRoutes];
+  const courseRoutes = enabledLocales.flatMap((locale) =>
+    allCourses.map((course) => ({
+      url: `${siteConfig.siteUrl}/${locale}${courseHref(course)}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.7
+    }))
+  );
+
+  return [...localizedStatic, ...departmentRoutes, ...courseRoutes];
 }
 
 /** Explicit robots metadata for the root layout. */

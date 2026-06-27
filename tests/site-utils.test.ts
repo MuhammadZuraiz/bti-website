@@ -21,9 +21,14 @@ describe("site safety utilities", () => {
     expect(resources.every((resource) => !isResourcePublished(resource))).toBe(true);
   });
 
-  it("hides map and social links when URLs are invalid", () => {
-    expect(hasValidMapUrl()).toBe(false);
+  it("treats empty/invalid URLs as not displayable", () => {
     expect(hasValidSocialUrl("")).toBe(false);
+    expect(hasValidSocialUrl("#")).toBe(false);
+  });
+
+  it("shows the configured map link", () => {
+    // BTI confirmed the Google Maps link.
+    expect(hasValidMapUrl()).toBe(true);
   });
 
   it("publishes only approved legal pages", () => {

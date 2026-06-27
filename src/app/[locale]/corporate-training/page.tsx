@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Building2, CheckCircle2 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { LeadForm } from "@/components/forms/lead-form";
+import { OptionalImagePanel } from "@/components/media/optional-image-panel";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { isLocale, type Locale } from "@/lib/locale";
@@ -58,7 +59,16 @@ export default async function CorporateTrainingPage({ params }: { params: Params
               Request a Corporate Training Conversation
             </ButtonLink>
           </div>
-          <div className="rounded-lg border border-white/15 bg-white/8 p-6">
+          <div className="overflow-hidden rounded-lg border border-white/15 bg-white/8 p-6">
+            <div className="media-zoom relative -mx-6 -mt-6 mb-6 aspect-[16/9] overflow-hidden">
+              <OptionalImagePanel
+                src="/images/corporate-training.jpg"
+                alt="A team taking part in a corporate training session"
+                fallbackTitle="Corporate training"
+                fallbackCopy="Tailored programmes delivered in-house or online."
+                priority
+              />
+            </div>
             <Building2 size={44} className="text-white" />
             <h2 className="mt-4 text-2xl font-semibold">A clearer starting point for team training.</h2>
             <p className="mt-3 leading-7 text-white/72">

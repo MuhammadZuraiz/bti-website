@@ -5,21 +5,30 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { CourseCard } from "@/components/courses/course-card";
 import { ButtonLink } from "@/components/ui/button-link";
-import { filterCourses, getCourseFilterOptions, type CourseFilters } from "@/lib/course-filter";
+import {
+  filterCourses,
+  getDeliveryMethodOptions,
+  type CourseFilters
+} from "@/lib/course-filter";
 import { trackEvent } from "@/lib/analytics";
 import type { Locale } from "@/lib/locale";
-import type { Course } from "@/types/course";
+import type { Course, Department } from "@/types/catalogue";
 
 type Props = {
   courses: Course[];
+  departments: Department[];
   locale: Locale;
   initialFilters: CourseFilters;
 };
 
-export function CourseCatalogue({ courses, locale, initialFilters }: Props) {
+export function CourseCatalogue({ courses, departments, locale, initialFilters }: Props) {
   const router = useRouter();
   const [filters, setFilters] = useState<CourseFilters>(initialFilters);
-  const options = useMemo(() => getCourseFilterOptions(courses), [courses]);
+  const deliveryMethods = useMemo(() => getDeliveryMethodOptions(courses), [courses]);
+  const departmentName = useMemo(
+    () => new Map(departments.map((d) => [d.slug, d.name])),
+    [departments]
+  );
   const filteredCourses = useMemo(
     () => filterCourses(courses, filters),
     [courses, filters]
@@ -42,7 +51,7 @@ export function CourseCatalogue({ courses, locale, initialFilters }: Props) {
 
   return (
     <div className="grid gap-8">
-      <div className="split-panel grid gap-4 rounded-lg p-4 lg:grid-cols-[1.2fr_1fr_1fr_1fr]">
+      <div className="split-panel grid gap-4 rounded-lg p-4 lg:grid-cols-[1.4fr_1fr_1fr]">
         <label className="field-label">
           Search courses
           <span className="relative">
@@ -55,49 +64,34 @@ export function CourseCatalogue({ courses, locale, initialFilters }: Props) {
               className="field-control ps-10"
               value={filters.query ?? ""}
               onChange={(event) => updateFilter("query", event.target.value)}
-              placeholder="IELTS, English, accounting..."
+              placeholder="IELTS, PMP, AutoCAD, Python..."
             />
           </span>
         </label>
         <label className="field-label">
-          Category
+          Department
           <select
             className="field-control"
-            value={filters.category ?? ""}
-            onChange={(event) => updateFilter("category", event.target.value)}
+            value={filters.department ?? ""}
+            onChange={(event) => updateFilter("department", event.target.value)}
           >
-            <option value="">All categories</option>
-            {options.categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
+            <option value="">All departments</option>
+            {departments.map((department) => (
+              <option key={department.slug} value={department.slug}>
+                {department.name}
               </option>
             ))}
           </select>
         </label>
         <label className="field-label">
-          Audience
+          Delivery method
           <select
             className="field-control"
-            value={filters.audience ?? ""}
-            onChange={(event) => updateFilter("audience", event.target.value)}
+            value={filters.deliveryMethod ?? ""}
+            onChange={(event) => updateFilter("deliveryMethod", event.target.value)}
           >
-            <option value="">All learners</option>
-            {options.audiences.map((audience) => (
-              <option key={audience} value={audience}>
-                {audience}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="field-label">
-          Delivery mode
-          <select
-            className="field-control"
-            value={filters.deliveryMode ?? ""}
-            onChange={(event) => updateFilter("deliveryMode", event.target.value)}
-          >
-            <option value="">All modes</option>
-            {options.deliveryModes.map((mode) => (
+            <option value="">All methods</option>
+            {deliveryMethods.map((mode) => (
               <option key={mode} value={mode}>
                 {mode}
               </option>
@@ -106,17 +100,24 @@ export function CourseCatalogue({ courses, locale, initialFilters }: Props) {
         </label>
       </div>
 
+      <p className="helper-text">
+        Showing {filteredCourses.length} course{filteredCourses.length === 1 ? "" : "s"}.
+      </p>
+
       {filteredCourses.length ? (
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {filteredCourses.map((course) => (
-            <CourseCard key={course.slug} course={course} locale={locale} />
+            <CourseCard
+              key={course.slug}
+              course={course}
+              locale={locale}
+              departmentName={departmentName.get(course.departmentSlug)}
+            />
           ))}
         </div>
       ) : (
         <div className="muted-panel rounded-lg p-8 text-center">
-          <h2 className="section-title">
-            We could not find an exact match.
-          </h2>
+          <h2 className="section-title">We could not find an exact match.</h2>
           <p className="supporting-copy mx-auto mt-3 max-w-xl">
             Speak with admissions and tell us what you want to learn.
           </p>

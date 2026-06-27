@@ -15,11 +15,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
   title: {
     default:
-      "British Training Institute Sharjah | English, IELTS & Professional Courses",
+      "British Training Institute Sharjah | IELTS, Cambridge English & Professional Training",
     template: "%s | British Training Institute Sharjah"
   },
   description:
-    "Explore English, IELTS preparation, business, accounting, HR and professional training options at British Training Institute in Sharjah.",
+    "Established in 2002, British Training Institute in Sharjah offers IELTS and Cambridge-affiliated English programmes, professional certifications, engineering, IT, finance and corporate training — classroom and online.",
   applicationName: "British Training Institute Sharjah",
   robots: buildRobotsMetadata(),
   icons: {
@@ -35,6 +35,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Without JS the scroll-reveal observer never runs, so keep all
+            .reveal content visible. */}
+        <noscript>
+          <style>{`.reveal{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
+      </head>
       <body className={bodyFont.variable}>
         {children}
         <AnalyticsScripts />

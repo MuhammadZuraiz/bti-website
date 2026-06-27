@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { CourseCatalogue } from "@/components/courses/course-catalogue";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { courses } from "@/content/courses";
-import { isLocale, type Locale } from "@/lib/locale";
+import { allCourses, allDepartments, departmentHref, getCoursesByDepartment } from "@/content/catalogue";
+import { isLocale, localizePath, type Locale } from "@/lib/locale";
 import { localizedMetadata } from "@/lib/metadata";
 import { isLocaleEnabled } from "@/lib/site-utils";
 import { notFound } from "next/navigation";
@@ -20,9 +22,9 @@ export async function generateMetadata({
   return localizedMetadata({
     locale,
     path: "/courses",
-    title: "Courses in Sharjah | British Training Institute",
+    title: "Training Courses & Departments in Sharjah | British Training Institute",
     description:
-      "Search English, IELTS, business, accounting, HR, computer and professional courses at British Training Institute in Sharjah."
+      "Explore 100+ professional and language courses across 11 departments at British Training Institute, Sharjah — IELTS, Cambridge English, PMP, ACCA, AutoCAD, Python and more."
   });
 }
 
@@ -47,33 +49,56 @@ export default async function CoursesPage({
   return (
     <>
       <section className="hero-surface py-14">
-        <div className="container-page grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+        <div className="container-page">
           <SectionHeading
             as="h1"
-            eyebrow="Course catalogue"
-            title="Compare training options in Sharjah."
-            intro="Search by category, learner type, delivery mode, or topic. Speak with admissions for current schedules, availability and fee details."
+            eyebrow="Training catalogue"
+            title="Explore our training departments and courses."
+            intro="Browse 100+ professional and language courses across 11 departments. Speak with admissions for current schedules, fees and available formats."
           />
-          <div className="muted-panel rounded-lg p-5">
-            <p className="helper-text">
-              Course details, schedules, fees, and available formats should be
-              confirmed with admissions before enrolment.
-            </p>
+        </div>
+      </section>
+
+      <section className="py-12">
+        <div className="container-page">
+          <h2 className="section-title">Departments</h2>
+          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {allDepartments.map((department) => (
+              <Link
+                key={department.slug}
+                href={localizePath(locale, departmentHref(department))}
+                className="compact-card group flex h-full flex-col rounded-lg p-5 transition hover:-translate-y-0.5 hover:border-[var(--brand-red)]"
+              >
+                <h3 className="card-title">{department.name}</h3>
+                <p className="helper-text mt-2 flex-1">{department.shortDescription}</p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--brand-red)]">
+                  {getCoursesByDepartment(department.slug).length} courses
+                  <ArrowRight size={15} className="rtl-flip" aria-hidden="true" />
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
-      <section className="py-14">
+
+      <section className="bg-white py-14">
         <div className="container-page">
-          <CourseCatalogue
-            courses={courses}
-            locale={locale}
-            initialFilters={{
-              category: asString(resolvedSearchParams.category),
-              audience: asString(resolvedSearchParams.audience),
-              deliveryMode: asString(resolvedSearchParams.deliveryMode),
-              query: asString(resolvedSearchParams.query)
-            }}
-          />
+          <h2 className="section-title">Search all courses</h2>
+          <p className="supporting-copy mt-2 max-w-2xl">
+            Find a specific course across every department.
+          </p>
+          <div className="mt-8">
+            <CourseCatalogue
+              courses={allCourses}
+              departments={allDepartments}
+              locale={locale}
+              initialFilters={{
+                department: asString(resolvedSearchParams.department),
+                deliveryMethod: asString(resolvedSearchParams.deliveryMethod),
+                query: asString(resolvedSearchParams.query)
+              }}
+            />
+          </div>
         </div>
       </section>
     </>

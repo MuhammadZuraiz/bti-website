@@ -1,4 +1,4 @@
-import { getCourseBySlug } from "@/content/courses";
+import { getCourseBySlug } from "@/content/catalogue";
 import { getResourceBySlug } from "@/content/resources";
 
 type QueryValue = string | string[] | undefined;
@@ -18,8 +18,8 @@ export function getContactContext(
   if (course) {
     return {
       kind: "course" as const,
-      title: `Ask about ${course.category}`,
-      formTitle: `Ask about ${course.title}`,
+      title: `Ask about ${course.title}`,
+      formTitle: `Register for ${course.title}`,
       submitLabel: "Ask Admissions",
       courseInterest: course.title,
       courseSlug: course.slug,

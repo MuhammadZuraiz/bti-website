@@ -7,7 +7,7 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { siteConfig } from "@/config/site";
-import { courses } from "@/content/courses";
+import { allDepartments } from "@/content/catalogue";
 import { confirmedEventByLeadType } from "@/lib/lead-analytics";
 import { leadPayloadSchema, type LeadType } from "@/lib/lead-schema";
 import { parseLeadSubmissionResponse } from "@/lib/lead-response";
@@ -67,11 +67,9 @@ function getUtmValue(key: string) {
 
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
-// Guided course-interest options, derived from the real catalogue so they stay
-// in sync. "Not sure yet" maps to an empty value (many enquirers don't know).
-const courseInterestOptions = Array.from(
-  new Set(courses.map((course) => course.category))
-);
+// Guided course-interest options (by department), derived from the catalogue so
+// they stay in sync. "Not sure yet" maps to an empty value.
+const courseInterestOptions = allDepartments.map((department) => department.name);
 
 export function LeadForm({
   leadType,

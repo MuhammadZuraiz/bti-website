@@ -48,8 +48,9 @@ describe("sitemap", () => {
 
     expect(urls).toContain(`${siteConfig.siteUrl}/en`);
     expect(urls).toContain(`${siteConfig.siteUrl}/en/courses`);
+    expect(urls).toContain(`${siteConfig.siteUrl}/en/courses/languages`);
     expect(urls).toContain(
-      `${siteConfig.siteUrl}/en/courses/english-language-courses-sharjah`
+      `${siteConfig.siteUrl}/en/courses/languages/ielts-preparation`
     );
     expect(urls).toContain(`${siteConfig.siteUrl}/en/contact`);
   });
@@ -67,7 +68,8 @@ describe("sitemap", () => {
   it("excludes disabled Arabic routes and internal endpoints", () => {
     const urls = buildSitemap("production").map((entry) => entry.url);
 
-    expect(urls.some((url) => url.includes("/ar"))).toBe(false);
+    // Check the /ar locale segment precisely (not a substring like /artificial...).
+    expect(urls.some((url) => url.includes(`${siteConfig.siteUrl}/ar`))).toBe(false);
     expect(urls.some((url) => url.includes("/api"))).toBe(false);
   });
 

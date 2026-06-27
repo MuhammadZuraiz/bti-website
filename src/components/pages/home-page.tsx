@@ -20,12 +20,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { ContextLink } from "@/components/conversion/context-link";
 import { OptionalImagePanel } from "@/components/media/optional-image-panel";
+import { Reveal } from "@/components/motion/reveal";
+import { StatsBand } from "@/components/sections/stats-band";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { JsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/config/site";
-import { courses, featuredCourses } from "@/content/courses";
+import {
+  allDepartments,
+  departmentHref,
+  featuredDepartments,
+  getCoursesByDepartment
+} from "@/content/catalogue";
 import { resources } from "@/content/resources";
 import type { dictionaries } from "@/content/i18n";
 import { getTrustItems } from "@/lib/trust";
@@ -172,39 +179,43 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
       </section>
 
       <section className="border-y border-[var(--brand-border)] bg-white py-5">
-        <div className="container-page grid gap-3 md:grid-cols-4">
+        <div className="container-page grid gap-3 md:grid-cols-3 lg:grid-cols-6">
           {trustItems.map((item) => (
             <div key={item.label} className="flex items-center gap-2 text-sm font-extrabold text-[var(--brand-navy)]">
-              <CheckCircle2 size={18} className="text-[var(--brand-green)]" />
+              <CheckCircle2 size={18} className="shrink-0 text-[var(--brand-green)]" />
               {item.label}
             </div>
           ))}
         </div>
       </section>
 
+      <StatsBand />
+
       <section className="py-16">
         <div className="container-page">
-          <SectionHeading
-            title={dictionary.home.coursesTitle}
-            intro={dictionary.home.coursesIntro}
-          />
+          <Reveal>
+            <SectionHeading
+              title={dictionary.home.coursesTitle}
+              intro={dictionary.home.coursesIntro}
+            />
+          </Reveal>
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {courses.map((course, index) => {
+            {allDepartments.map((department, index) => {
               const Icon = categoryIcons[index] ?? Sparkles;
               return (
-                <Link
-                  key={course.slug}
-                  href={localizePath(locale, `/courses/${course.slug}`)}
-                  className={`${index < 2 ? "featured-card" : "compact-card"} group rounded-lg p-5 transition hover:-translate-y-0.5 hover:border-[var(--brand-red)]`}
-                >
-                  <Icon size={28} className="text-[var(--brand-red)]" />
-                  <h3 className="card-title mt-4">
-                    {course.category}
-                  </h3>
-                  <p className="helper-text mt-2">
-                    {course.shortDescription}
-                  </p>
-                </Link>
+                <Reveal key={department.slug} delay={(index % 4) * 70}>
+                  <Link
+                    href={localizePath(locale, departmentHref(department))}
+                    className={`${index < 2 ? "featured-card" : "compact-card"} group block h-full rounded-lg p-5 transition hover:-translate-y-0.5 hover:border-[var(--brand-red)]`}
+                  >
+                    <Icon size={28} className="text-[var(--brand-red)]" />
+                    <h3 className="card-title mt-4">{department.name}</h3>
+                    <p className="helper-text mt-2">{department.shortDescription}</p>
+                    <p className="meta-label mt-3 text-[var(--brand-red)]">
+                      {getCoursesByDepartment(department.slug).length} courses
+                    </p>
+                  </Link>
+                </Reveal>
               );
             })}
           </div>
@@ -213,7 +224,9 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
 
       <section className="bg-white py-16">
         <div className="container-page">
-          <SectionHeading title={dictionary.home.transformationTitle} />
+          <Reveal>
+            <SectionHeading title={dictionary.home.transformationTitle} />
+          </Reveal>
           <div className="mt-8 grid gap-5 lg:grid-cols-3">
             {[
               [
@@ -229,7 +242,12 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                 "Request a corporate-training conversation shaped around your team's needs."
               ]
             ].map(([before, after], index) => (
-              <article key={before} className="timeline-item rounded-lg p-6">
+              <Reveal
+                as="article"
+                key={before}
+                delay={index * 90}
+                className="timeline-item rounded-lg p-6"
+              >
                 <p className="meta-label text-[var(--brand-red)]">
                   Step {index + 1}
                 </p>
@@ -246,7 +264,7 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                 <p className="supporting-copy mt-2">
                   {after}
                 </p>
-              </article>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -254,42 +272,83 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
 
       <section className="py-16">
         <div className="container-page">
-          <SectionHeading title={dictionary.home.featuredTitle} />
+          <Reveal>
+            <SectionHeading title={dictionary.home.featuredTitle} />
+          </Reveal>
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {featuredCourses.map((course) => (
-              <article key={course.slug} className="compact-card flex h-full flex-col rounded-lg p-5">
-                <p className="meta-label text-[var(--brand-red)]">
-                  {course.category}
-                </p>
-                <h3 className="card-title mt-3">
-                  {course.title}
-                </h3>
-                <p className="helper-text mt-3 flex-1">
-                  {course.shortDescription}
-                </p>
+            {featuredDepartments.map((department, index) => (
+              <Reveal
+                as="article"
+                key={department.slug}
+                delay={(index % 4) * 70}
+                className="compact-card flex h-full flex-col rounded-lg p-5"
+              >
+                <p className="meta-label text-[var(--brand-red)]">Department</p>
+                <h3 className="card-title mt-3">{department.name}</h3>
+                <p className="helper-text mt-3 flex-1">{department.shortDescription}</p>
                 <p className="meta-label mt-4">
-                  For {course.audience[0]}
+                  {getCoursesByDepartment(department.slug).length} courses
                 </p>
                 <div className="mt-5 grid gap-2">
-                  <ButtonLink href={localizePath(locale, `/courses/${course.slug}`)} variant="dark">
-                    Explore Programme
+                  <ButtonLink href={localizePath(locale, departmentHref(department))} variant="dark">
+                    Explore Department
                   </ButtonLink>
                   <ContextLink
-                    href={localizePath(locale, `/contact?course=${course.slug}`)}
+                    href={localizePath(locale, "/contact")}
                     className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-[var(--brand-red)] transition hover:bg-[var(--brand-soft)]"
                   >
                     Ask Admissions
                   </ContextLink>
                 </div>
-              </article>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
+      <section className="bg-white py-16">
+        <div className="container-page">
+          <Reveal className="grid items-center gap-8 lg:grid-cols-[1fr_1.05fr]">
+            <div className="media-zoom relative aspect-[4/3] overflow-hidden rounded-2xl border border-[var(--brand-border)] shadow-[var(--shadow-md)]">
+              <OptionalImagePanel
+                src="/images/Building_Board.jpg"
+                alt="British Training Institute signboard in Sharjah showing City & Guilds, IELTS, LCCI, IDP and TOEFL accreditations"
+                fallbackTitle="Recognised in Sharjah"
+                fallbackCopy="A long-established training centre with internationally recognised affiliations."
+              />
+            </div>
+            <div>
+              <p className="meta-label text-[var(--brand-red)]">
+                Recognised &amp; established
+              </p>
+              <h2 className="section-title mt-3 text-balance">
+                A trusted Sharjah training centre with internationally recognised affiliations.
+              </h2>
+              <p className="supporting-copy mt-4 max-w-xl">
+                British Training Institute has supported learners and organisations
+                for over two decades, with programmes aligned to globally
+                recognised standards.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {["City & Guilds", "IELTS", "LCCI", "IDP", "TOEFL iBT", "EDI"].map(
+                  (badge) => (
+                    <span
+                      key={badge}
+                      className="rounded-full border border-[var(--brand-border)] bg-[var(--brand-soft)] px-3 py-1 text-xs font-extrabold text-[var(--brand-navy)]"
+                    >
+                      {badge}
+                    </span>
+                  )
+                )}
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       <section className="section-navy py-16 text-white">
         <div className="container-page grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-          <div>
+          <Reveal>
             <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.14em] text-white/60">
               Admissions journey
             </p>
@@ -301,18 +360,22 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
               current schedules and availability, then confirm the right next
               step with admissions.
             </p>
-          </div>
+          </Reveal>
           <div className="grid gap-4 md:grid-cols-3">
             {[
               ["Explore your options", "Browse courses based on the skills you want to build."],
               ["Speak with admissions", "Ask about current schedules, availability, and the most suitable starting point."],
               ["Begin your learning plan", "Confirm your preferred programme and take your next step with confidence."]
             ].map(([title, copy], index) => (
-              <div key={title} className="rounded-lg border border-white/15 bg-white/8 p-5">
+              <Reveal
+                key={title}
+                delay={index * 90}
+                className="rounded-lg border border-white/15 bg-white/8 p-5"
+              >
                 <p className="text-3xl font-black text-white/35">0{index + 1}</p>
                 <h3 className="mt-4 text-lg font-semibold">{title}</h3>
                 <p className="mt-2 text-sm leading-6 text-white/72">{copy}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
           <ButtonLink href={localizePath(locale, "/contact")} className="lg:col-start-2">
@@ -322,8 +385,8 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
       </section>
 
       <section className="py-16">
-        <div className="container-page grid gap-6 lg:grid-cols-2">
-          <div className="featured-card rounded-lg p-7">
+        <div className="container-page grid gap-6 lg:grid-cols-2 lg:items-start">
+          <Reveal className="featured-card flex flex-col rounded-lg p-7">
             <ClipboardCheck size={34} className="text-[var(--brand-red)]" />
             <h2 className="section-title mt-4">
               {dictionary.home.placementTitle}
@@ -331,11 +394,22 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
             <p className="supporting-copy mt-3">
               {dictionary.home.placementCopy}
             </p>
-            <ButtonLink href={localizePath(locale, "/placement-test")} className="mt-6">
+            <ButtonLink
+              href={localizePath(locale, "/placement-test")}
+              className="mt-6 self-start"
+            >
               Request a Placement Test
             </ButtonLink>
-          </div>
-          <div className="split-panel rounded-lg p-7">
+          </Reveal>
+          <Reveal delay={90} className="split-panel flex flex-col rounded-lg p-7">
+            <div className="media-zoom relative mb-6 aspect-[16/9] overflow-hidden rounded-lg">
+              <OptionalImagePanel
+                src="/images/corporate-training.jpg"
+                alt="A team taking part in a corporate training session"
+                fallbackTitle="Corporate training"
+                fallbackCopy="Tailored in-house programmes for teams and organisations."
+              />
+            </div>
             <Building2 size={34} className="text-[var(--brand-red)]" />
             <h2 className="section-title mt-4">
               {dictionary.home.corporateTitle}
@@ -343,19 +417,29 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
             <p className="supporting-copy mt-3">
               {dictionary.home.corporateCopy}
             </p>
-            <ButtonLink href={localizePath(locale, "/corporate-training")} className="mt-6">
+            <ButtonLink
+              href={localizePath(locale, "/corporate-training")}
+              className="mt-6 self-start"
+            >
               Request a Corporate Training Proposal
             </ButtonLink>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       <section className="bg-white py-16">
         <div className="container-page">
-          <SectionHeading title={dictionary.home.resourcesTitle} />
+          <Reveal>
+            <SectionHeading title={dictionary.home.resourcesTitle} />
+          </Reveal>
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {resources.slice(0, 4).map((resource) => (
-              <article key={resource.slug} className="compact-card rounded-lg p-5">
+            {resources.slice(0, 4).map((resource, index) => (
+              <Reveal
+                as="article"
+                key={resource.slug}
+                delay={(index % 4) * 70}
+                className="compact-card rounded-lg p-5"
+              >
                 <FileText size={26} className="text-[var(--brand-red)]" />
                 <h3 className="card-title mt-4">
                   {resource.title}
@@ -378,7 +462,7 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                     Request this guide from admissions.
                   </ContextLink>
                 )}
-              </article>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -386,7 +470,9 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
 
       <section className="py-16">
         <div className="container-page">
-          <SectionHeading title={dictionary.home.faqTitle} />
+          <Reveal>
+            <SectionHeading title={dictionary.home.faqTitle} />
+          </Reveal>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             {homeFaq.map((item) => (
               <article key={item.question} className="text-row">
@@ -407,7 +493,7 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
 
       <section className="bg-[var(--brand-soft)] py-16">
         <div className="container-page">
-          <div className="relative overflow-hidden rounded-2xl border border-[var(--brand-border)] border-l-4 border-l-[var(--brand-red)] bg-white p-7 shadow-[var(--shadow-sm)] md:p-9">
+          <Reveal className="relative overflow-hidden rounded-2xl border border-[var(--brand-border)] border-l-4 border-l-[var(--brand-red)] bg-white p-7 shadow-[var(--shadow-sm)] md:p-9">
             {/* Soft burgundy glow behind the action panel */}
             <div
               aria-hidden="true"
@@ -460,7 +546,7 @@ export function HomePage({ locale, dictionary }: HomePageProps) {
                 </p>
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

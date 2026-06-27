@@ -13,7 +13,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { siteConfig } from "@/config/site";
-import { courses } from "@/content/courses";
+import { allDepartments, departmentHref } from "@/content/catalogue";
 import type { dictionaries } from "@/content/i18n";
 import { localizePath, type Locale } from "@/lib/locale";
 import { trackEvent } from "@/lib/analytics";
@@ -122,15 +122,15 @@ export function Header({ locale, dictionary }: HeaderProps) {
                 href={localizePath(locale, "/courses")}
                 className="rounded-md px-3 py-2 text-sm font-extrabold text-[var(--brand-red)] hover:bg-[var(--brand-soft)]"
               >
-                View all programmes
+                All departments &amp; courses
               </Link>
-              {courses.map((course) => (
+              {allDepartments.map((department) => (
                 <Link
-                  key={course.slug}
-                  href={localizePath(locale, `/courses/${course.slug}`)}
+                  key={department.slug}
+                  href={localizePath(locale, departmentHref(department))}
                   className="rounded-md px-3 py-2 text-sm font-semibold text-[var(--brand-ink)] hover:bg-[var(--brand-soft)]"
                 >
-                  {course.category}
+                  {department.name}
                 </Link>
               ))}
             </div>
