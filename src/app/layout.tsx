@@ -35,6 +35,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Without JS the scroll-reveal observer never runs, so keep all
+            .reveal content visible. */}
+        <noscript>
+          <style>{`.reveal{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
+      </head>
       <body className={bodyFont.variable}>
         {children}
         <AnalyticsScripts />

@@ -3,6 +3,7 @@ import { Info, MapPin } from "lucide-react";
 import { notFound } from "next/navigation";
 import { ContactActions } from "@/components/conversion/contact-actions";
 import { LeadForm } from "@/components/forms/lead-form";
+import { OptionalImagePanel } from "@/components/media/optional-image-panel";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { siteConfig } from "@/config/site";
 import { isLocale, type Locale } from "@/lib/locale";
@@ -56,7 +57,15 @@ export default async function ContactPage({
       <div className="container-page grid gap-10">
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="grid content-start gap-6">
-            <article className="featured-card rounded-lg p-6">
+            <article className="featured-card overflow-hidden rounded-lg p-6">
+              <div className="media-zoom relative -mx-6 -mt-6 mb-5 aspect-[16/10] overflow-hidden">
+                <OptionalImagePanel
+                  src="/images/contact-location.jpg"
+                  alt="British Training Institute signboard on the building in Sharjah, showing its accreditations"
+                  fallbackTitle="Find BTI in Sharjah"
+                  fallbackCopy="Look for the British Training Institute signboard at the entrance."
+                />
+              </div>
               <MapPin size={30} className="text-[var(--brand-red)]" />
               <h2 className="section-title mt-4">Visit or contact</h2>
               <p className="supporting-copy mt-3">{siteConfig.address}</p>

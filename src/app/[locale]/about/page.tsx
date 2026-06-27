@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { CheckCircle2, Compass, MapPin, Target } from "lucide-react";
 import { notFound } from "next/navigation";
 import { ButtonLink } from "@/components/ui/button-link";
+import { OptionalImagePanel } from "@/components/media/optional-image-panel";
+import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { StatsBand } from "@/components/sections/stats-band";
 import { siteConfig } from "@/config/site";
@@ -55,25 +57,35 @@ export default async function AboutPage({ params }: { params: Params }) {
 
       <section className="py-14">
         <div className="container-page grid gap-10">
-          <div className="grid gap-4 max-w-3xl">
-            {aboutParagraphs.map((paragraph) => (
-              <p key={paragraph} className="supporting-copy">
-                {paragraph}
-              </p>
-            ))}
-          </div>
+          <Reveal className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="grid gap-4">
+              {aboutParagraphs.map((paragraph) => (
+                <p key={paragraph} className="supporting-copy">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+            <div className="media-zoom relative aspect-[4/3] overflow-hidden rounded-2xl border border-[var(--brand-border)] shadow-[var(--shadow-md)]">
+              <OptionalImagePanel
+                src="/images/about-location.jpg"
+                alt="Learners studying at British Training Institute in Sharjah"
+                fallbackTitle="Learning at BTI"
+                fallbackCopy="A focused environment for individuals, professionals and teams."
+              />
+            </div>
+          </Reveal>
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <article className="featured-card rounded-lg p-6">
+            <Reveal as="article" className="featured-card rounded-lg p-6">
               <Target size={30} className="text-[var(--brand-red)]" />
               <h2 className="section-title mt-4">Mission</h2>
               <p className="supporting-copy mt-3">{mission}</p>
-            </article>
-            <article className="featured-card rounded-lg p-6">
+            </Reveal>
+            <Reveal as="article" delay={90} className="featured-card rounded-lg p-6">
               <Compass size={30} className="text-[var(--brand-red)]" />
               <h2 className="section-title mt-4">Vision</h2>
               <p className="supporting-copy mt-3">{vision}</p>
-            </article>
+            </Reveal>
           </div>
 
           <div>
