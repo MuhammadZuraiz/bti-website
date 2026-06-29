@@ -30,29 +30,29 @@
   "dependencies": {
     "@prisma/adapter-pg": "7.8.0",
     "@prisma/client": "7.8.0",
-    "lucide-react": "1.17.0",
+    "lucide-react": "1.22.0",
     "next": "16.2.9",
-    "pg": "8.21.0",
+    "pg": "8.22.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "react-hook-form": "7.78.0",
+    "react-hook-form": "7.80.0",
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@axe-core/playwright": "4.11.3",
-    "@playwright/test": "1.60.0",
-    "@tailwindcss/postcss": "4.3.0",
+    "@axe-core/playwright": "4.12.1",
+    "@playwright/test": "1.61.1",
+    "@tailwindcss/postcss": "4.3.1",
     "@types/node": "25.9.3",
     "@types/pg": "8.20.0",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.9",
-    "postcss": "8.5.15",
-    "prettier": "3.8.4",
+    "postcss": "8.5.16",
+    "prettier": "3.9.1",
     "prisma": "7.8.0",
-    "tailwindcss": "4.3.0",
+    "tailwindcss": "4.3.1",
     "typescript": "6.0.3",
-    "vitest": "4.1.8"
+    "vitest": "4.1.9"
   }
 }
