@@ -1,94 +1,118 @@
 # BTI Information Intake
 
-Everything the website needs from British Training Institute to go live. The
-website is built and deploy-ready; these are the only remaining inputs. Fill in
-each item; the "Where it goes" column tells the developer exactly what to update.
+Tracks what British Training Institute has provided and what is still outstanding
+before launch. The website is built and deploy-ready; nothing is fabricated —
+until an item is provided, the site hides the related section or uses neutral
+wording.
 
-Until an item is provided, the site safely hides the related section or uses
-neutral wording — nothing is fabricated.
+**Legend:** ✅ confirmed / done · ⏳ pending. Run `pnpm check:readiness` for the
+live launch gate.
 
-## 1. Identity & contact (NAP)
+## 1. Identity & contact (NAP) — ✅ Confirmed by BTI
 
-| Item | Value to confirm | Where it goes |
-| --- | --- | --- |
-| Official/legal business name | | `src/config/site.ts` businessName |
-| Address wording (public) | | `src/config/site.ts` address |
-| Landline (display + tel) | | `src/config/site.ts` landlineDisplay/landlineHref |
-| Mobile (display + tel) | | `src/config/site.ts` mobileDisplay/mobileHref |
-| WhatsApp number | | `src/config/site.ts` whatsappNumber |
-| Public email | | `src/config/site.ts` email |
-| Opening hours | | `src/config/site.ts` openingHours[] |
+All set in `src/config/site.ts`.
 
-## 2. Domain & email
+| Item | Confirmed value |
+| --- | --- |
+| Official/legal business name | British Training Institute |
+| Public address | Corniche St, Al Shiokh, Hay Al Gharb, Sharjah, United Arab Emirates |
+| Landline | +971 6 568 7222 |
+| Mobile | +971 52 545 0385 |
+| WhatsApp | +971 52 545 0385 |
+| Toll-free | 800 284747 |
+| Public email | info@britishinstitute.ae |
+| Opening hours | Saturday–Thursday 9:00 AM – 9:00 PM; Friday closed |
+
+## 2. Domain & email — ✅ Decided
 
 | Item | Decision | Where it goes |
 | --- | --- | --- |
-| Canonical domain | `britishinstitute.ae` (registrar tasjeel.ae, hosting on GoDaddy) | `NEXT_PUBLIC_SITE_URL` env |
+| Canonical domain | `britishinstitute.ae` (registrar tasjeel.ae, hosting on GoDaddy) | set `NEXT_PUBLIC_SITE_URL=https://britishinstitute.ae` at deploy |
 | Public email | `info@britishinstitute.ae` | `src/config/site.ts` email |
 
 No legacy domains require redirects — `britishinstitute.ae` is the only domain.
+Remaining at launch: point DNS at the host and confirm email auth (SPF/DKIM/DMARC).
 
-## 3. Social & map
+## 3. Social & map — ✅ Confirmed (defaults set in `src/config/site.ts`)
 
-| Item | URL | Where it goes |
-| --- | --- | --- |
-| Instagram | | `NEXT_PUBLIC_INSTAGRAM_URL` |
-| Facebook | | `NEXT_PUBLIC_FACEBOOK_URL` |
-| LinkedIn | | `NEXT_PUBLIC_LINKEDIN_URL` |
-| Google Business Profile | | `NEXT_PUBLIC_GOOGLE_BUSINESS_PROFILE_URL` |
-| Map / directions URL | | `NEXT_PUBLIC_MAP_URL` |
-
-## 4. Course data (per course)
-
-For each course in `src/content/catalogue/<department>.ts`, confirm or keep the
-neutral "on request" wording (see `docs/course-content-needed.md`):
-
-- Duration, schedule, fees, certificate wording.
-- Any correction to outcomes/audience/overview.
-
-## 5. Trust evidence (each is OFF until proven — `siteConfig.featureFlags`)
-
-| Flag | Evidence required to enable |
+| Channel | URL |
 | --- | --- |
-| showSpeaListing | Official SPEA profile URL/document |
-| showCentreId | Official Centre ID evidence + approved wording |
-| showIeltsVenueStatement | Official IELTS partner/venue listing + wording |
-| showFoundingYearText | Proof reconciling logo (2002) vs records (2004) |
-| showGraduateCount | Auditable source + approved wording |
-| showTestimonials | Written consent + name/display approval + date |
-| showAccreditationLogos | Permission to display + current certificate |
-| showPartnerLogos | Display permission + brand guidelines |
+| Instagram | https://www.instagram.com/british_training.institute |
+| Facebook | https://www.facebook.com/btiuae |
+| LinkedIn | https://www.linkedin.com/company/british-training-instiute/ |
+| Google Business Profile | https://share.google/klnD7wkVJfpjWuH0v |
+| Map / directions | https://maps.app.goo.gl/VsEtaMCcnPVDb99Y6 |
 
-## 6. Photography (optional — no placeholders shown without them)
+Each can be overridden per environment via the matching `NEXT_PUBLIC_*` env var.
 
-Provide approved, licensed images with alt text for the slots in
-`src/config/media.ts` (see also `docs/visual-polish-deferred-items.md`):
+## 4. Course data (per course) — ⏳ Pending
 
-- Homepage hero, About/Contact location, Corporate training.
-- Per-course images: drop at `public/images/courses/<slug>.jpg` and set
-  `imageSrc`/`imageAlt` on that course in `src/content/catalogue/<department>.ts`.
+~88 of 101 courses still publish neutral "available on request" placeholders. For
+each, BTI supplies the nine detail fields — see `docs/course-content-needed.md`
+(run `pnpm courses:audit` for the live count). Content lives in
+`src/content/catalogue/<department>.ts`; setting `contentStatus: "complete"`
+fills the page and the PDF brochure automatically.
 
-## 7. Legal & consent
+## 5. Trust evidence (`siteConfig.featureFlags`)
+
+Text claims BTI confirmed in writing are **live**; logo image files and
+testimonials stay hidden until official assets + permission arrive.
+
+| Flag | Status | Notes |
+| --- | --- | --- |
+| showFoundingYearText | ✅ on | Established 2002, confirmed in writing. |
+| showKeyStats | ✅ on | 20+ years, 10,000+ learners, 100+ courses, 500+ corporate clients. |
+| showIeltsTestCentre | ✅ on | IELTS Test Centre, confirmed in writing. |
+| showCambridgePartner | ✅ on | Cambridge-affiliated / Cambridge English prep, confirmed in writing. |
+| showIsoCertified | ✅ on | ISO-certified QMS claim, confirmed in writing. |
+| showAccreditationLogos | ⏳ off | Needs official logo files + permission. The ISO logo on hand is watermarked stock and Cambridge needs the correct mark — see `docs/website-rebuild-handoff.md` §11. |
+| showPartnerLogos | ⏳ off | Display permission + brand guidelines. |
+| showTestimonials | ⏳ off | Written consent + name/display approval + date. |
+
+BTI also requested a dedicated **Accreditations & Partnerships page** — not built yet.
+
+## 6. Photography — ⏳ Pending real BTI photos
+
+Stock placeholders are in place for the homepage hero, About/Contact location and
+Corporate training (see `docs/image-credits.md`). The real BTI signboard
+(`public/images/Building_Board.jpg`) is already used on the homepage credibility
+band and the Contact page. Replace the stock images with approved, licensed BTI
+photography in the `src/config/media.ts` slots — drop-in, no code change.
+Per-course images: drop at `public/images/courses/<slug>.jpg` and set
+`imageSrc`/`imageAlt` on the course. See `docs/visual-polish-deferred-items.md`.
+
+## 7. Legal & consent — ⏳ Draft, not published
 
 | Item | Where it goes |
 | --- | --- |
-| Review/approve draft privacy, cookies, terms | `src/content/legal.ts` + publish via `legalPages.*.state` (docs/legal-review.md) |
+| Review/approve privacy, cookies, terms (currently `state: "draft"`) | `src/content/legal.ts` + publish via `legalPages.*.state` (docs/legal-review.md) |
 | Cookie-consent decision (banner vs none) | `requireCookieConsent` flag + docs/analytics-events.md |
 | Data retention period, privacy contact, named processors | `src/content/legal.ts` |
 
-## 8. Analytics
+The accessibility statement is already published.
 
-| Item | Where it goes |
-| --- | --- |
-| Use website analytics? (Google Analytics ID) | `NEXT_PUBLIC_GA_MEASUREMENT_ID` |
+## 8. Analytics — ⏳ Pending decision
+
+Google Analytics is off (no `NEXT_PUBLIC_GA_MEASUREMENT_ID`). BTI to decide
+whether to use analytics and, if so, the cookie-consent approach
+(docs/analytics-events.md).
 
 ## 9. Arabic (later)
 
-Native-reviewed Arabic translations for every page → `src/content/i18n.ts`,
-then enable `featureFlags.enableArabic`. English-first launch does not need this.
+`featureFlags.enableArabic` is off. Native-reviewed Arabic translations for every
+page → `src/content/i18n.ts`, then enable the flag. English-first launch does not
+need this.
 
-## 10. Service credentials (for the developer to provision/configure)
+## 10. Service credentials (provision at launch) — ⏳ Pending
 
 Hosted PostgreSQL, Upstash Redis REST, Cloudflare Turnstile keys, Odoo/generic
 webhook endpoint + secret, retry cron secret, admin password, monitoring
 (Sentry). Captured in `.env.production.example`.
+
+---
+
+**Confirmed and built-in:** identity/NAP, domain, socials, map/GBP, and the
+written credibility claims. **Outstanding before launch:** detailed course
+content, trust *assets* (logos/certs/testimonials), real photography, legal-page
+review + publish, the analytics/consent decision, and production service
+credentials.

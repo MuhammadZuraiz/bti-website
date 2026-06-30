@@ -36,7 +36,7 @@ The single source of truth for launching the BTI website. See also
 - [ ] Arabic translations review
 - [ ] Legal pages (privacy, cookies, terms) wording
 - [ ] Cookie-consent decision (see docs/analytics-events.md)
-- [ ] Founding-year wording decision (logo shows 2002; records reportedly say 2004 — keep text silent until resolved)
+- [x] Founding year confirmed: 2002 (BTI confirmed in writing; `showFoundingYearText` on)
 
 ## Infrastructure
 
