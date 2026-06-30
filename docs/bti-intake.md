@@ -23,9 +23,10 @@ neutral wording — nothing is fabricated.
 
 | Item | Decision | Where it goes |
 | --- | --- | --- |
-| Canonical domain (btiuae.com / britain-institute.com / btiuk.org / other) | | `NEXT_PUBLIC_SITE_URL` env |
-| Resolve email-domain vs redirect conflict (public email currently uses britain-institute.com, also a redirect candidate) | | site.ts email + docs/redirect-map.md |
-| Registrar / DNS access owner | | docs/redirect-map.md |
+| Canonical domain | `britishinstitute.ae` (registrar tasjeel.ae, hosting on GoDaddy) | `NEXT_PUBLIC_SITE_URL` env |
+| Public email | `info@britishinstitute.ae` | `src/config/site.ts` email |
+
+No legacy domains require redirects — `britishinstitute.ae` is the only domain.
 
 ## 3. Social & map
 
@@ -39,8 +40,8 @@ neutral wording — nothing is fabricated.
 
 ## 4. Course data (per course)
 
-For each of the 8 courses in `src/content/courses.ts`, confirm or keep the
-neutral "on request" wording:
+For each course in `src/content/catalogue/<department>.ts`, confirm or keep the
+neutral "on request" wording (see `docs/course-content-needed.md`):
 
 - Duration, schedule, fees, certificate wording.
 - Any correction to outcomes/audience/overview.
@@ -60,12 +61,12 @@ neutral "on request" wording:
 
 ## 6. Photography (optional — no placeholders shown without them)
 
-Provide approved, licensed images with alt text per `docs/image-shot-list.md`
-and the slots in `src/config/media.ts`:
+Provide approved, licensed images with alt text for the slots in
+`src/config/media.ts` (see also `docs/visual-polish-deferred-items.md`):
 
 - Homepage hero, About/Contact location, Corporate training.
 - Per-course images: drop at `public/images/courses/<slug>.jpg` and set
-  `imageSrc`/`imageAlt` on that course in `src/content/courses.ts`.
+  `imageSrc`/`imageAlt` on that course in `src/content/catalogue/<department>.ts`.
 
 ## 7. Legal & consent
 

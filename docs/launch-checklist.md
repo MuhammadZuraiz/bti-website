@@ -67,14 +67,13 @@ The single source of truth for launching the BTI website. See also
 - [ ] `pnpm check:seo-headers https://<domain> production` passes
 - [ ] robots.txt allows crawling, blocks `/api/`
 - [ ] Sitemap lists only enabled-locale, published routes
-- [ ] Redirects per docs/redirect-map.md (only after approval)
 - [ ] JSON-LD validated with an external tool (see docs/seo-plan.md)
 - [ ] Search Console verified + sitemap submitted
 - [ ] Bing Webmaster Tools verified
 - [ ] Social preview renders (OG/Twitter images)
 - [ ] Favicon and icons render
 - [ ] 404 page renders correctly
-- [ ] Local listings aligned (docs/local-seo-checklist.md)
+- [ ] Local listings aligned (docs/seo-plan.md)
 
 ## QA
 

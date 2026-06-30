@@ -348,7 +348,7 @@ visible without JS). All decorative motion respects reduced-motion.
   hand"). Usage permission is confirmed; the practical blockers are file quality and
   using the *right* mark.
 - Approved **testimonials**.
-- Real **photography** (see `docs/image-shot-list.md`, `docs/trust-assets-needed.md`).
+- Real **photography** (see `docs/visual-polish-deferred-items.md`, `docs/trust-assets-needed.md`).
 - Downloadable **resource PDFs** (course guide, IELTS checklist, corporate profile).
 - Native-reviewed **Arabic copy** for full bilingual launch.
 - Final **course content** for `contentStatus: "outline"` courses
@@ -389,6 +389,5 @@ ISO needs the real registrar-issued mark. Don't ship the watermarked ISO image.
 ### Existing docs worth reading alongside this
 `docs/handover-guide.md` (day-to-day ops), `docs/lead-capture-architecture.md`,
 `docs/odoo-integration.md`, `docs/operations-runbook.md`,
-`docs/accessibility-checklist.md`, `docs/seo-plan.md`, `docs/local-seo-checklist.md`,
-`docs/launch-checklist.md`, and the prior visual exploration under
-`docs/design-handoff/bti-homepage-redesign/`.
+`docs/accessibility-checklist.md`, `docs/seo-plan.md`,
+`docs/launch-checklist.md`.

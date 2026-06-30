@@ -41,7 +41,7 @@ Review queued/failed leads daily until CRM delivery is proven stable.
 | To change… | Edit… |
 | --- | --- |
 | Phone, address, email, hours, social, map | `src/config/site.ts` (and the `NEXT_PUBLIC_*` env for URLs) |
-| Course details (schedule, fees, text, image) | `src/content/courses.ts` |
+| Course details (schedule, fees, text, image) | `src/content/catalogue/<department>.ts` |
 | Publish a legal page | set its `state` to `"published"` in `src/config/site.ts` (docs/legal-review.md) |
 | Turn on a trust claim | the relevant `featureFlags` in `src/config/site.ts` — only with approved evidence |
 | Add a photo | drop the file under `public/images/…` per `src/config/media.ts` |
@@ -73,6 +73,6 @@ credentials whenever a staff member leaves or a secret may be exposed.
 - Daily: review new + queued enquiries (admin page); check uptime/error alerts.
 - Weekly: verify a database backup restores.
 - Monthly: review external-account access.
-- Quarterly: review public listings (docs/local-seo-checklist.md).
+- Quarterly: review public listings (docs/seo-plan.md).
 - Pre-launch and ongoing references: `docs/launch-checklist.md`,
   `docs/operations-runbook.md`, `docs/release-process.md`.

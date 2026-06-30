@@ -71,13 +71,12 @@ is noindexed and disallowed in robots.txt. See `docs/handover-guide.md`.
 - `docs/legal-review.md` — reviewing and publishing the legal pages
 - `docs/lead-capture-architecture.md`, `docs/odoo-integration.md`,
   `docs/spam-protection.md`, `docs/seo-plan.md`, `docs/release-process.md`,
-  `docs/redirect-map.md`, `docs/local-seo-checklist.md`,
   `docs/analytics-events.md`, `docs/accessibility-checklist.md`,
   `docs/performance-checklist.md`, `docs/client-demo.md`
 
 ## Not production-ready until BTI confirms
 
-Canonical domain + redirect ownership, trade-licence details, final course
+Trade-licence details, final course
 catalogue/fees/schedules, contact NAP + hours, social/map URLs, legal-page
 approvals + cookie-consent decision, Arabic copy, email + DNS (SPF/DKIM/DMARC),
 and service credentials (PostgreSQL, Redis, Turnstile, Odoo/webhook, monitoring).

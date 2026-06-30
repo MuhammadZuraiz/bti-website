@@ -12,7 +12,7 @@ with its own owner.
 - Lead retry cron every 5–15 minutes.
 - Daily queued-lead review.
 - Monthly access review (hosting, database, DNS, Cloudflare, registrar).
-- Quarterly public-listing review (see docs/local-seo-checklist.md).
+- Quarterly public-listing review (see docs/seo-plan.md).
 
 ## Hosted PostgreSQL
 
